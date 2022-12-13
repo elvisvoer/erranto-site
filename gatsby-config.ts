@@ -10,7 +10,12 @@ const config: GatsbyConfig = {
   // Learn more at: https://gatsby.dev/graphql-typegen
   graphqlTypegen: true,
   plugins: [
-    "gatsby-plugin-theme-ui",
+    {
+      resolve: `gatsby-plugin-theme-ui`,
+      options: {
+        preset: "@theme-ui/preset-deep",
+      },
+    },
     "gatsby-plugin-image",
     "gatsby-plugin-sitemap",
     {

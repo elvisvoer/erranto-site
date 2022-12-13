@@ -1,5 +1,7 @@
 import * as React from "react";
 import { Link, useStaticQuery, graphql } from "gatsby";
+/** @jsx jsx */
+import { jsx } from "theme-ui";
 import {
   container,
   heading,
@@ -26,7 +28,16 @@ const Layout = ({ pageTitle, children }: LayoutProps) => {
   `);
 
   return (
-    <div className={container}>
+    <div
+      className={container}
+      sx={{
+        // this uses the value from `theme.space[4]`
+        padding: 4,
+        // these use values from `theme.colors`
+        color: "text",
+        backgroundColor: "background",
+      }}
+    >
       <header className={siteTitle}>{data.site.siteMetadata.title}</header>
       <nav>
         <ul className={navLinks}>
@@ -42,6 +53,11 @@ const Layout = ({ pageTitle, children }: LayoutProps) => {
           </li>
           <li className={navLinkItem}>
             <Link to="/blog" className={navLinkText}>
+              Blog
+            </Link>
+          </li>
+          <li className={navLinkItem}>
+            <Link to="/presets" className={navLinkText}>
               Blog
             </Link>
           </li>
