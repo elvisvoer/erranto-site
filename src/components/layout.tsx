@@ -6,6 +6,12 @@ import { Themed } from "@theme-ui/mdx";
 import { deep } from "@theme-ui/presets";
 import Figlet from "./figlet";
 
+import {
+  navLinks,
+  navLinkItem,
+} from "./layout.module.css";
+
+
 type LayoutProps = {
   children: React.ReactNode | React.ReactNode[];
 };
@@ -27,8 +33,9 @@ const Layout = ({ children }: LayoutProps) => {
         <div>
           <Figlet text={data.site.siteMetadata.title} />
           <nav>
-            <ul>
-              <li>
+            <span>[elvis@erranto ~]$ ls</span>
+            <ul className={navLinks}>
+              <li className={navLinkItem}>
                 <Link
                   to="/"
                   sx={{
@@ -38,7 +45,7 @@ const Layout = ({ children }: LayoutProps) => {
                     },
                   }}
                 >
-                  Blog
+                  blog
                 </Link>
               </li>
             </ul>
