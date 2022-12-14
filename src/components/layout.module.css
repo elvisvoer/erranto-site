@@ -4,7 +4,7 @@ body {
   -webkit-zoom: 1.2;
   -moz-transform: scale(1.2, 1.2);
   -moz-transform-origin: top left;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 .nav-links {
