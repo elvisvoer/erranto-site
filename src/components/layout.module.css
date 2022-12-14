@@ -1,27 +1,21 @@
-.container {
-  margin: auto;
-  max-width: 500px;
-  font-family: sans-serif;
+body {
+  zoom: 1.2;
+  -ms-zoom: 1.2;
+  -webkit-zoom: 1.2;
+  -moz-transform: scale(1.2, 1.2);
+  -moz-transform-origin: top left;
+  overflow: hidden;
 }
 
-.heading {
-  color: rebeccapurple;
-}
 .nav-links {
   display: flex;
   list-style: none;
   padding-left: 0;
+  margin: 0px;
 }
 .nav-link-item {
   padding-right: 2rem;
 }
 .nav-link-text {
   color: black;
-}
-
-.site-title {
-  font-size: 3rem;
-  color: gray;
-  font-weight: 700;
-  margin: 3rem 0;
 }

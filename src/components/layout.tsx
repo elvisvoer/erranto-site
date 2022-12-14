@@ -27,9 +27,11 @@ const Layout = ({ children }: LayoutProps) => {
   return (
     <div>
       <ThemeProvider theme={deep}>
-        <Themed.root sx={{ bg: "background", color: "text", p: 3 }}>
+        <Themed.root
+          sx={{ bg: "background", color: "text", marginLeft: 3, maxWidth: 640 }}
+        >
           <Figlet text={data.site.siteMetadata.title} />
-          <nav>
+          <nav sx={{ marginBottom: 3 }}>
             <span>
               <Prompt /> ls
             </span>

@@ -4,15 +4,27 @@ import { Link, graphql } from "gatsby";
 import { jsx } from "theme-ui";
 import Layout from "../components/layout";
 import Seo from "../components/seo";
+import Prompt from "../components/prompt";
 
 const IndexPage = ({ data }: any) => {
   return (
     <Layout>
+      <span>
+        <Prompt />
+        ls -l blog
+      </span>
       {data.allMdx.nodes.map(
         (node: any) =>
           node.frontmatter.slug && (
-            <article key={node.id}>
-              <h2>
+            <article
+              key={node.id}
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <div>
                 <Link
                   to={`/blog/${node.frontmatter.slug}`}
                   sx={{
@@ -24,8 +36,8 @@ const IndexPage = ({ data }: any) => {
                 >
                   {node.frontmatter.title}
                 </Link>
-              </h2>
-              <p>Posted: {node.frontmatter.date}</p>
+              </div>
+              <div>Posted: {node.frontmatter.date}</div>
             </article>
           )
       )}
