@@ -4,4 +4,5 @@
   -webkit-zoom: 0.1;
   -moz-transform: scale(0.1, 0.1);
   -moz-transform-origin: top left;
+  max-height: 512px;
 }
