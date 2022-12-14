@@ -51,7 +51,7 @@ const IndexPage = ({ data }: any) => {
 
 export const query = graphql`
   query {
-    allMdx(sort: { frontmatter: { date: DESC } }) {
+    allMdx {
       nodes {
         frontmatter {
           title

@@ -6,7 +6,7 @@ import Seo from "../../components/seo";
 const BlogPost = ({ data, children }) => {
   return (
     <Layout pageTitle={data.mdx.frontmatter.title}>
-      <p>Posted: {data.mdx.frontmatter.date}</p>
+      <p>Posted: {data.mdx.parent.birthTime}</p>
       {children}
     </Layout>
   );
@@ -17,7 +17,13 @@ export const query = graphql`
     mdx(id: { eq: $id }) {
       frontmatter {
         title
-        date(formatString: "MMMM DD, YYYY")
+      }
+      parent {
+        id
+        ... on File {
+          size
+          birthTime(formatString: "MMMM D, YYYY")
+        }
       }
     }
   }
