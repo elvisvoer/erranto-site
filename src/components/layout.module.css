@@ -1,12 +1,3 @@
-body {
-  zoom: 1.2;
-  -ms-zoom: 1.2;
-  -webkit-zoom: 1.2;
-  -moz-transform: scale(1.2, 1.2);
-  -moz-transform-origin: top left;
-  overflow-x: hidden;
-}
-
 .nav-links {
   display: flex;
   list-style: none;
