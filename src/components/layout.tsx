@@ -29,7 +29,17 @@ const Layout = ({ pageTitle, children }: LayoutProps) => {
           <nav>
             <ul>
               <li>
-                <Link to="/">Blog</Link>
+                <Link
+                  to="/"
+                  sx={{
+                    color: "inherit",
+                    "&.active": {
+                      color: "primary",
+                    },
+                  }}
+                >
+                  Blog
+                </Link>
               </li>
             </ul>
           </nav>

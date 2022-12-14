@@ -1,5 +1,7 @@
 import * as React from "react";
 import { Link, graphql } from "gatsby";
+/** @jsx jsx */
+import { jsx } from "theme-ui";
 import Layout from "../components/layout";
 import Seo from "../components/seo";
 
@@ -11,7 +13,15 @@ const IndexPage = ({ data }: any) => {
           node.frontmatter.slug && (
             <article key={node.id}>
               <h2>
-                <Link to={`/blog/${node.frontmatter.slug}`}>
+                <Link
+                  to={`/blog/${node.frontmatter.slug}`}
+                  sx={{
+                    color: "inherit",
+                    "&.active": {
+                      color: "primary",
+                    },
+                  }}
+                >
                   {node.frontmatter.title}
                 </Link>
               </h2>
