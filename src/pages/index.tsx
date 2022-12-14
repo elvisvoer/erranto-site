@@ -19,29 +19,31 @@ const IndexPage = ({ data }: any) => {
       </div>
       <div>total {totalSize}</div>
       <table sx={{ width: "100%" }}>
-        {data.allMdx.nodes.map(
-          (node: any) =>
-            node.frontmatter.slug && (
-              <tr key={node.id}>
-                <td>-rw-rw-r-- 1 elvis elvis</td>
-                <td>{node.parent.size}</td>
-                <td>{node.parent.modifiedTime}</td>
-                <td>
-                  <Link
-                    to={`/blog/${node.frontmatter.slug}`}
-                    sx={{
-                      color: "inherit",
-                      "&.active": {
-                        color: "primary",
-                      },
-                    }}
-                  >
-                    {node.frontmatter.title}
-                  </Link>
-                </td>
-              </tr>
-            )
-        )}
+        {data.allMdx.nodes
+          .filter((n: any) => n)
+          .map(
+            (node: any) =>
+              node.frontmatter.slug && (
+                <tr key={node.id}>
+                  <td>-rw-rw-r-- 1 elvis elvis</td>
+                  <td>{node.parent.size}</td>
+                  <td>{node.parent.modifiedTime}</td>
+                  <td>
+                    <Link
+                      to={`/blog/${node.frontmatter.slug}`}
+                      sx={{
+                        color: "inherit",
+                        "&.active": {
+                          color: "primary",
+                        },
+                      }}
+                    >
+                      {node.frontmatter.title}
+                    </Link>
+                  </td>
+                </tr>
+              )
+          )}
       </table>
     </Layout>
   );
