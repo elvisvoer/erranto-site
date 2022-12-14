@@ -6,11 +6,10 @@ import { Themed } from "@theme-ui/mdx";
 import { deep } from "@theme-ui/presets";
 
 type LayoutProps = {
-  pageTitle: string;
   children: React.ReactNode | React.ReactNode[];
 };
 
-const Layout = ({ pageTitle, children }: LayoutProps) => {
+const Layout = ({ children }: LayoutProps) => {
   const data = useStaticQuery(graphql`
     query {
       site {
@@ -43,10 +42,7 @@ const Layout = ({ pageTitle, children }: LayoutProps) => {
               </li>
             </ul>
           </nav>
-          <main>
-            <h1>{pageTitle}</h1>
-            {children}
-          </main>
+          <main>{children}</main>
         </div>{" "}
       </Themed.root>
     </ThemeProvider>

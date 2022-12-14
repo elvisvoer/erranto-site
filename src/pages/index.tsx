@@ -7,7 +7,7 @@ import Seo from "../components/seo";
 
 const IndexPage = ({ data }: any) => {
   return (
-    <Layout pageTitle="Blog">
+    <Layout>
       {data.allMdx.nodes.map(
         (node: any) =>
           node.frontmatter.slug && (
