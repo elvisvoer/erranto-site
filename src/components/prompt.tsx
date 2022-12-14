@@ -1,3 +1,3 @@
 import React from "react";
 
-export default () => <span>[elvis@erranto ~]$&nbsp;</span>;
+export default () => <span>[elvis@erranto.com ~]$&nbsp;</span>;
