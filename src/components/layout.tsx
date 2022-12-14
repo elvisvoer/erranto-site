@@ -29,7 +29,7 @@ const Layout = ({ pageTitle, children }: LayoutProps) => {
           <nav>
             <ul>
               <li>
-                <Link to="/">Home</Link>
+                <Link to="/">Blog</Link>
               </li>
             </ul>
           </nav>

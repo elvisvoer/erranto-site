@@ -5,17 +5,20 @@ import Seo from "../components/seo";
 
 const IndexPage = ({ data }: any) => {
   return (
-    <Layout pageTitle="My Blog Posts">
-      {data.allMdx.nodes.map((node: any) => (
-        <article key={node.id}>
-          {/* <h2>
-            <Link to={`/blog/${node.frontmatter.slug}`}>
-              {node.frontmatter.title}
-            </Link>
-          </h2> */}
-          {/* <p>Posted: {node.frontmatter.date}</p> */}
-        </article>
-      ))}
+    <Layout pageTitle="Blog">
+      {data.allMdx.nodes.map(
+        (node: any) =>
+          node.frontmatter.slug && (
+            <article key={node.id}>
+              <h2>
+                <Link to={`/blog/${node.frontmatter.slug}`}>
+                  {node.frontmatter.title}
+                </Link>
+              </h2>
+              <p>Posted: {node.frontmatter.date}</p>
+            </article>
+          )
+      )}
     </Layout>
   );
 };
@@ -35,6 +38,6 @@ export const query = graphql`
   }
 `;
 
-export const Head = () => <Seo title="My Blog Posts" />;
+export const Head = () => <Seo title="Blog" />;
 
 export default IndexPage;
