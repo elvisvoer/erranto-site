@@ -4,6 +4,7 @@ import { Link, useStaticQuery, graphql } from "gatsby";
 import { jsx, ThemeProvider } from "theme-ui";
 import { Themed } from "@theme-ui/mdx";
 import { deep } from "@theme-ui/presets";
+import Figlet from "./figlet";
 
 type LayoutProps = {
   children: React.ReactNode | React.ReactNode[];
@@ -24,7 +25,7 @@ const Layout = ({ children }: LayoutProps) => {
     <ThemeProvider theme={deep}>
       <Themed.root sx={{ bg: "background", color: "text", p: 3 }}>
         <div>
-          <header>{data.site.siteMetadata.title}</header>
+          <Figlet text={data.site.siteMetadata.title} />
           <nav>
             <ul>
               <li>
