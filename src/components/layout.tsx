@@ -5,12 +5,9 @@ import { jsx, ThemeProvider } from "theme-ui";
 import { Themed } from "@theme-ui/mdx";
 import { deep } from "@theme-ui/presets";
 import Figlet from "./figlet";
+import Prompt from "./prompt";
 
-import {
-  navLinks,
-  navLinkItem,
-} from "./layout.module.css";
-
+import { navLinks, navLinkItem } from "./layout.module.css";
 
 type LayoutProps = {
   children: React.ReactNode | React.ReactNode[];
@@ -28,12 +25,14 @@ const Layout = ({ children }: LayoutProps) => {
   `);
 
   return (
-    <ThemeProvider theme={deep}>
-      <Themed.root sx={{ bg: "background", color: "text", p: 3 }}>
-        <div>
+    <div>
+      <ThemeProvider theme={deep}>
+        <Themed.root sx={{ bg: "background", color: "text", p: 3 }}>
           <Figlet text={data.site.siteMetadata.title} />
           <nav>
-            <span>[elvis@erranto ~]$ ls</span>
+            <span>
+              <Prompt /> ls
+            </span>
             <ul className={navLinks}>
               <li className={navLinkItem}>
                 <Link
@@ -48,12 +47,25 @@ const Layout = ({ children }: LayoutProps) => {
                   blog
                 </Link>
               </li>
+              <li className={navLinkItem}>
+                <Link
+                  to="/about"
+                  sx={{
+                    color: "inherit",
+                    "&.active": {
+                      color: "primary",
+                    },
+                  }}
+                >
+                  about.mdx
+                </Link>
+              </li>
             </ul>
           </nav>
           <main>{children}</main>
-        </div>{" "}
-      </Themed.root>
-    </ThemeProvider>
+        </Themed.root>
+      </ThemeProvider>
+    </div>
   );
 };
 
