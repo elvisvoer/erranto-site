@@ -38,7 +38,7 @@ const IndexPage = ({ data }: any) => {
                         },
                       }}
                     >
-                      {node.frontmatter.title}
+                      {node.frontmatter.slug}.mdx
                     </Link>
                   </td>
                 </tr>
@@ -54,7 +54,6 @@ export const query = graphql`
     allMdx {
       nodes {
         frontmatter {
-          title
           slug
         }
         id
@@ -70,6 +69,6 @@ export const query = graphql`
   }
 `;
 
-export const Head = () => <Seo title="Blog" />;
+export const Head = () => <Seo title="Erranto Blog" />;
 
 export default IndexPage;

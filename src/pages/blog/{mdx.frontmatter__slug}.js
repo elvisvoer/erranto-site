@@ -2,10 +2,16 @@ import * as React from "react";
 import { graphql } from "gatsby";
 import Layout from "../../components/layout";
 import Seo from "../../components/seo";
+import Prompt from "../../components/prompt";
 
 const BlogPost = ({ data, children }) => {
   return (
-    <Layout pageTitle={data.mdx.frontmatter.title}>
+    <Layout>
+      <div>
+        <Prompt />
+        cat blog/{data.mdx.frontmatter.slug}.mdx | mdx-viewer
+      </div>
+      <h2>{data.mdx.frontmatter.title}</h2>
       <p>Posted: {data.mdx.parent.birthTime}</p>
       {children}
     </Layout>
@@ -17,6 +23,7 @@ export const query = graphql`
     mdx(id: { eq: $id }) {
       frontmatter {
         title
+        slug
       }
       parent {
         id
