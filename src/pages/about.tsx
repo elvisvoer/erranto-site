@@ -14,7 +14,7 @@ const AboutPage = () => {
         cat about.mdx | mdx-viewer
       </div>
       <h2>About me</h2>
-      <div>This is a simple about page.</div>
+      <div>Welcome to my little universe!</div>
       <Elvis />
     </Layout>
   );
