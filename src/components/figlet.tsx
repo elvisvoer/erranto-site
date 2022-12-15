@@ -1,5 +1,7 @@
 import * as React from "react";
 import figlet from "figlet";
+/** @jsx jsx */
+import { jsx } from "theme-ui";
 
 import font from "figlet/importable-fonts/Banner3.js";
 
@@ -30,7 +32,7 @@ const Figlet = ({ text }: { text: string }) => {
     getText(text).then(setFig);
   }, []);
 
-  return <pre>{fig}</pre>;
+  return <pre sx={{ fontSize: "0.75rem" }}>{fig}</pre>;
 };
 
 export default Figlet;
