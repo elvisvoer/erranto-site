@@ -51,10 +51,11 @@ const IndexPage = ({ data }: any) => {
 
 export const query = graphql`
   query {
-    allMdx {
+    allMdx(sort: { frontmatter: { date: DESC } }) {
       nodes {
         frontmatter {
           slug
+          date
         }
         id
         parent {
