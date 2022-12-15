@@ -31,7 +31,7 @@ const Layout = ({ children }: LayoutProps) => {
         sx={{
           bg: "background",
           color: "text",
-          marginLeft: 3,
+          padding: 2,
           maxWidth: 640,
           display: "flex",
           flexDirection: "column",
