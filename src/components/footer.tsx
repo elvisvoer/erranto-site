@@ -1,4 +1,6 @@
 import React from "react";
+/** @jsx jsx */
+import { jsx } from "theme-ui";
 
 import Prompt from "./prompt";
 
@@ -7,7 +9,7 @@ export default () => (
     <div>
       <Prompt /> echo $COPYRIGHT
     </div>
-    <pre>
+    <pre sx={{ fontSize: ".7rem" }}>
       {`*************************************************************************
 *                                                                       *
 *                           COPYRIGHT NOTICE                            *
