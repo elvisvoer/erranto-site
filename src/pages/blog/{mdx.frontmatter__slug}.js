@@ -12,7 +12,7 @@ const BlogPost = ({ data, children }) => {
         cat blog/{data.mdx.frontmatter.slug}.mdx | mdx-viewer
       </div>
       <h2>{data.mdx.frontmatter.title}</h2>
-      <p>Posted: {data.mdx.parent.birthTime}</p>
+      <p>Posted: {data.mdx.frontmatter.date}</p>
       {children}
     </Layout>
   );
@@ -23,14 +23,8 @@ export const query = graphql`
     mdx(id: { eq: $id }) {
       frontmatter {
         title
+        date(formatString: "MMMM D, YYYY")
         slug
-      }
-      parent {
-        id
-        ... on File {
-          size
-          birthTime(formatString: "MMMM D, YYYY")
-        }
       }
     }
   }
