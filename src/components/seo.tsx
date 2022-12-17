@@ -21,12 +21,6 @@ const Seo = ({ title }: SeoProps) => {
       <title>
         {title} | {data.site.siteMetadata.title}
       </title>
-      <script
-        async
-        defer
-        src="https://analytics.umami.is/script.js"
-        data-website-id="3e8f8c7e-de17-40c6-bc2e-5362a6cc6cf8"
-      ></script>
     </>
   );
 };
