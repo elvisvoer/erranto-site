@@ -24,8 +24,8 @@ const Seo = ({ title }: SeoProps) => {
       <script
         async
         defer
-        data-website-id="60ea6765-9fa9-4164-a429-a494c59e871d"
-        src="https://umami-production-b848.up.railway.app/umami.js"
+        src="https://analytics.umami.is/script.js"
+        data-website-id="3e8f8c7e-de17-40c6-bc2e-5362a6cc6cf8"
       ></script>
     </>
   );
