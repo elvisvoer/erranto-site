@@ -69,6 +69,6 @@ export const query = graphql`
   }
 `;
 
-export const Head = () => <Seo title="Erranto Blog" />;
+export const Head = () => <Seo title="Erranto" />;
 
 export default IndexPage;
