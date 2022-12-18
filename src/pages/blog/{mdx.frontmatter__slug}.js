@@ -11,7 +11,7 @@ const BlogPost = ({ data, children }) => {
         <Prompt />
         cat blog/{data.mdx.frontmatter.slug}.mdx | mdx-viewer
       </div>
-      <h2>{data.mdx.frontmatter.title}</h2>
+      <h1>{data.mdx.frontmatter.title}</h1>
       <p>Posted: {data.mdx.frontmatter.date}</p>
       {children}
     </Layout>
