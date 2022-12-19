@@ -7,6 +7,7 @@
 .nav-link-item {
   padding-right: 2rem;
 }
-.nav-link-text {
-  color: black;
+
+a {
+  color: inherit;
 }

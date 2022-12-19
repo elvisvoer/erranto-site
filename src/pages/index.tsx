@@ -29,15 +29,7 @@ const IndexPage = ({ data }: any) => {
                   <td>{node.parent.size}</td>
                   <td>{node.frontmatter.date}</td>
                   <td>
-                    <Link
-                      to={`/blog/${node.frontmatter.slug}`}
-                      sx={{
-                        color: "inherit",
-                        "&.active": {
-                          color: "primary",
-                        },
-                      }}
-                    >
+                    <Link to={`/blog/${node.frontmatter.slug}`}>
                       {node.frontmatter.slug}.mdx
                     </Link>
                   </td>

@@ -45,30 +45,10 @@ const Layout = ({ children }: LayoutProps) => {
           </span>
           <ul className={navLinks}>
             <li className={navLinkItem}>
-              <Link
-                to="/"
-                sx={{
-                  color: "inherit",
-                  "&.active": {
-                    color: "primary",
-                  },
-                }}
-              >
-                blog
-              </Link>
+              <Link to="/">blog</Link>
             </li>
             <li className={navLinkItem}>
-              <Link
-                to="/about"
-                sx={{
-                  color: "inherit",
-                  "&.active": {
-                    color: "primary",
-                  },
-                }}
-              >
-                about.mdx
-              </Link>
+              <Link to="/about">about.mdx</Link>
             </li>
           </ul>
         </nav>
