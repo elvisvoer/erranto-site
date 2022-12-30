@@ -17,6 +17,7 @@ export default function HTML(props) {
           defer
           src="https://analytics.umami.is/script.js"
           data-website-id="3e8f8c7e-de17-40c6-bc2e-5362a6cc6cf8"
+          data-domains="erranto.com,errantositemain.gatsbyjs.io"
         ></script>
       </head>
       <body {...props.bodyAttributes}>
