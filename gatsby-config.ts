@@ -3,7 +3,7 @@ import type { GatsbyConfig } from "gatsby";
 const config: GatsbyConfig = {
   siteMetadata: {
     title: `Erranto`,
-    siteUrl: "https://errantositemain.gatsbyjs.io/",
+    siteUrl: "https://erranto.com/",
   },
   // More easily incorporate content into your pages through automatic TypeScript type generation and better GraphQL IntelliSense.
   // If you use VSCode you can also use the GraphQL plugin
@@ -44,6 +44,59 @@ const config: GatsbyConfig = {
         path: `./blog`,
       },
       __key: "blog",
+    },
+    {
+      resolve: `gatsby-plugin-feed`,
+      options: {
+        query: `
+          {
+            site {
+              siteMetadata {
+                siteUrl
+                site_url: siteUrl
+              }
+            }
+          }
+        `,
+        feeds: [
+          {
+            serialize: ({ query: { site, allMdx } }: any) => {
+              return allMdx.nodes.map((node: any) => {
+                return Object.assign({}, node.frontmatter, {
+                  description: node.excerpt,
+                  title: node.frontmatter.title,
+                  date: node.frontmatter.date,
+                  url: `${site.siteMetadata.siteUrl}/blog/${node.frontmatter.slug}`,
+                  guid: `${site.siteMetadata.siteUrl}/blog/${node.frontmatter.slug}`,
+                  custom_elements: [{ "content:encoded": node.body }],
+                });
+              });
+            },
+            query: `
+              {
+                allMdx(sort: { frontmatter: { date: DESC } }) {
+                  nodes {
+                    excerpt
+                    body
+                    frontmatter {
+                      slug
+                      title
+                      date(formatString: "MMMM D, YYYY")
+                    }
+                  }
+                }
+              }
+            `,
+            output: "/rss.xml",
+            title: "Erranto RSS Feed",
+            // optional configuration to insert feed reference in pages:
+            // if `string` is used, it will be used to create RegExp and then test if pathname of
+            // current page satisfied this regular expression;
+            // if not provided or `undefined`, all pages will have feed reference inserted
+            match: "^/blog/",
+          },
+        ],
+      },
     },
   ],
 };

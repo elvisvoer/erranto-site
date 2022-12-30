@@ -50,6 +50,9 @@ const Layout = ({ children }: LayoutProps) => {
             <li className={navLinkItem}>
               <Link to="/about">about.mdx</Link>
             </li>
+            <li className={navLinkItem}>
+              <Link to="/rss.xml">rss.xml</Link>
+            </li>
           </ul>
         </nav>
         <main sx={{ flex: 1 }}>{children}</main>
