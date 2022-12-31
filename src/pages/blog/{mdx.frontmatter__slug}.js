@@ -1,5 +1,6 @@
 import * as React from "react";
 import { graphql } from "gatsby";
+import Utterances from "utterances-react";
 import Layout from "../../components/layout";
 import Seo from "../../components/seo";
 import Prompt from "../../components/prompt";
@@ -14,6 +15,14 @@ const BlogPost = ({ data, children }) => {
       <h1>{data.mdx.frontmatter.title}</h1>
       <p>Posted: {data.mdx.frontmatter.date}</p>
       {children}
+      <hr style={{ color: "inherit" }} />
+      <Utterances
+        repo="elvisvoer/erranto-comments"
+        issue-term="pathname"
+        theme="dark-blue"
+        crossorigin="anonymous"
+        async={false}
+      />
     </Layout>
   );
 };
