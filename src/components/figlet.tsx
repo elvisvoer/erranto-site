@@ -32,7 +32,7 @@ const Figlet = ({ text }: { text: string }) => {
     getText(text).then(setFig);
   }, []);
 
-  return <pre sx={{ fontSize: ["2.15vw", ".7rem", ".9rem"] }}>{fig}</pre>;
+  return <pre sx={{ fontSize: ["2.15vw", ".7rem", ".97rem"] }}>{fig}</pre>;
 };
 
 export default Figlet;
