@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 export default function HTML(props) {
   return (
-    <html {...props.htmlAttributes}>
+    <html {...props.htmlAttributes} style={{ backgroundColor: "#060606" }}>
       <head>
         <meta charSet="utf-8" />
         <meta httpEquiv="x-ua-compatible" content="ie=edge" />
@@ -20,7 +20,7 @@ export default function HTML(props) {
           data-domains="erranto.com,errantositemain.gatsbyjs.io"
         ></script>
       </head>
-      <body {...props.bodyAttributes} style={{ backgroundColor: "#060606" }}>
+      <body {...props.bodyAttributes}>
         {props.preBodyComponents}
         <div
           key={`body`}
