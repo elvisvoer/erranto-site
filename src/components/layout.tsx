@@ -1,10 +1,10 @@
 import * as React from "react";
-import { Link, useStaticQuery, graphql } from "gatsby";
+import { Link } from "gatsby";
 /** @jsx jsx */
 import { jsx, ThemeProvider, InitializeColorMode } from "theme-ui";
 import { Themed } from "@theme-ui/mdx";
 import { tosh } from "@theme-ui/presets";
-import Figlet from "./figlet";
+import Logo from "./logo";
 import Prompt from "./prompt";
 import Footer from "./footer";
 
@@ -15,16 +15,6 @@ type LayoutProps = {
 };
 
 const Layout = ({ children }: LayoutProps) => {
-  const data = useStaticQuery(graphql`
-    query {
-      site {
-        siteMetadata {
-          title
-        }
-      }
-    }
-  `);
-
   return (
     <ThemeProvider theme={tosh}>
       <InitializeColorMode />
@@ -39,7 +29,7 @@ const Layout = ({ children }: LayoutProps) => {
           minHeight: "100vh",
         }}
       >
-        <Figlet text={data.site.siteMetadata.title} />
+        <Logo />
         <nav sx={{ marginBottom: 3 }}>
           <span>
             <Prompt /> ls
