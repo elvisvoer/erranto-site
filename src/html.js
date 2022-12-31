@@ -20,7 +20,7 @@ export default function HTML(props) {
           data-domains="erranto.com,errantositemain.gatsbyjs.io"
         ></script>
       </head>
-      <body {...props.bodyAttributes}>
+      <body {...props.bodyAttributes} style={{ backgroundColor: "#060606" }}>
         {props.preBodyComponents}
         <div
           key={`body`}
