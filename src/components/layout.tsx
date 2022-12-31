@@ -3,7 +3,7 @@ import { Link, useStaticQuery, graphql } from "gatsby";
 /** @jsx jsx */
 import { jsx, ThemeProvider } from "theme-ui";
 import { Themed } from "@theme-ui/mdx";
-import { deep } from "@theme-ui/presets";
+import { tosh } from "@theme-ui/presets";
 import Figlet from "./figlet";
 import Prompt from "./prompt";
 import Footer from "./footer";
@@ -26,7 +26,7 @@ const Layout = ({ children }: LayoutProps) => {
   `);
 
   return (
-    <ThemeProvider theme={deep}>
+    <ThemeProvider theme={tosh}>
       <Themed.root
         sx={{
           bg: "background",
