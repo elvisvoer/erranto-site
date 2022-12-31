@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Link, useStaticQuery, graphql } from "gatsby";
 /** @jsx jsx */
-import { jsx, ThemeProvider } from "theme-ui";
+import { jsx, ThemeProvider, InitializeColorMode } from "theme-ui";
 import { Themed } from "@theme-ui/mdx";
 import { tosh } from "@theme-ui/presets";
 import Figlet from "./figlet";
@@ -27,6 +27,7 @@ const Layout = ({ children }: LayoutProps) => {
 
   return (
     <ThemeProvider theme={tosh}>
+      <InitializeColorMode />
       <Themed.root
         sx={{
           bg: "background",
