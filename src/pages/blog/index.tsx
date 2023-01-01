@@ -1,31 +1,67 @@
 import * as React from "react";
-import { graphql } from "gatsby";
+import { Link, graphql, useStaticQuery } from "gatsby";
+/** @jsx jsx */
+import { jsx } from "theme-ui";
 import Seo from "../../components/seo";
-import BlogPage from "./blog";
+import Layout from "../../components/layout";
+import Prompt from "../../components/prompt";
 
-const IndexPage = ({ data }: any) => {
-  return <BlogPage data={data} />;
-};
-
-export const query = graphql`
-  query {
-    allMdx(sort: { frontmatter: { date: DESC } }) {
-      nodes {
-        frontmatter {
-          slug
-          date(formatString: "MMMM D, YYYY")
-        }
-        id
-        parent {
+const IndexPage = () => {
+  const data = useStaticQuery(graphql`
+    query {
+      allMdx(sort: { frontmatter: { date: DESC } }) {
+        nodes {
+          frontmatter {
+            slug
+            date(formatString: "MMMM D, YYYY")
+          }
           id
-          ... on File {
-            size
+          parent {
+            id
+            ... on File {
+              size
+            }
           }
         }
       }
     }
-  }
-`;
+  `);
+
+  const totalSize = data.allMdx.nodes.reduce((acc: number, node: any) => {
+    return acc + node.parent.size;
+  }, 0);
+
+  return (
+    <Layout>
+      <div>
+        <Prompt />
+        ls -l blog/
+      </div>
+      <div>total {totalSize}</div>
+      <table sx={{ width: "100%" }}>
+        <tbody>
+          {data.allMdx.nodes
+            .filter((n: any) => n)
+            .map(
+              (node: any) =>
+                node.frontmatter.slug && (
+                  <tr key={node.id}>
+                    <td>elvis</td>
+                    <td>{node.parent.size}</td>
+                    <td>{node.frontmatter.date}</td>
+                    <td>
+                      <Link to={`/blog/${node.frontmatter.slug}`}>
+                        {node.frontmatter.slug}.mdx
+                      </Link>
+                    </td>
+                  </tr>
+                )
+            )}
+        </tbody>
+      </table>
+    </Layout>
+  );
+};
 
 export const Head = () => <Seo title="Blog" />;
 
