@@ -60,9 +60,9 @@ const Layout = ({ children }: LayoutProps) => {
         }}
       >
         <div sx={{ marginBottom: 3 }}>
+          <InitializeColorMode />
           <Logo />
           <ThemeChanger />
-          <InitializeColorMode />
         </div>
         <nav sx={{ marginBottom: 3 }}>
           <span>
