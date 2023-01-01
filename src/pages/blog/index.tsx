@@ -1,7 +1,7 @@
 import * as React from "react";
 import { graphql } from "gatsby";
 import Seo from "../../components/seo";
-import BlogPage from "../../components/blog";
+import BlogPage from "./blog";
 
 const IndexPage = ({ data }: any) => {
   return <BlogPage data={data} />;

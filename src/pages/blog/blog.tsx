@@ -2,8 +2,8 @@ import * as React from "react";
 import { Link } from "gatsby";
 /** @jsx jsx */
 import { jsx } from "theme-ui";
-import Layout from "../components/layout";
-import Prompt from "../components/prompt";
+import Layout from "../../components/layout";
+import Prompt from "../../components/prompt";
 
 export default ({ data }: any) => {
   const totalSize = data.allMdx.nodes.reduce((acc: number, node: any) => {
