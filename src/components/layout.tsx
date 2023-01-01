@@ -1,7 +1,12 @@
 import * as React from "react";
 import { Link } from "gatsby";
 /** @jsx jsx */
-import { jsx, ThemeProvider, InitializeColorMode } from "theme-ui";
+import {
+  jsx,
+  ThemeProvider,
+  InitializeColorMode,
+  useColorMode,
+} from "theme-ui";
 import { Themed } from "@theme-ui/mdx";
 import { tosh } from "@theme-ui/presets";
 import Logo from "./logo";
@@ -14,14 +19,39 @@ type LayoutProps = {
   children: React.ReactNode | React.ReactNode[];
 };
 
+const themeLink = {
+  textDecoration: "underline",
+  cursor: "pointer",
+};
+
+const ThemeChanger = () => {
+  const [colorMode, setColorMode] = useColorMode();
+
+  const setDarkMode = (isDark: boolean) =>
+    setColorMode(isDark ? "dark" : "default");
+
+  return (
+    <>
+      <div>Current theme: {colorMode !== "dark" ? "light" : "dark"}</div>
+      <div>
+        Available themes:{" "}
+        <span style={themeLink} onClick={() => setDarkMode(false)}>
+          light
+        </span>
+        ,{" "}
+        <span style={themeLink} onClick={() => setDarkMode(true)}>
+          dark
+        </span>
+      </div>
+    </>
+  );
+};
+
 const Layout = ({ children }: LayoutProps) => {
   return (
     <ThemeProvider theme={tosh}>
-      <InitializeColorMode />
       <Themed.root
         sx={{
-          bg: "background",
-          color: "text",
           padding: 2,
           maxWidth: 640,
           display: "flex",
@@ -29,7 +59,11 @@ const Layout = ({ children }: LayoutProps) => {
           minHeight: "100vh",
         }}
       >
-        <Logo />
+        <div sx={{ marginBottom: 3 }}>
+          <Logo />
+          <ThemeChanger />
+          <InitializeColorMode />
+        </div>
         <nav sx={{ marginBottom: 3 }}>
           <span>
             <Prompt /> ls

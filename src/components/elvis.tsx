@@ -1,12 +1,17 @@
 import React from "react";
 /** @jsx jsx */
-import { jsx } from "theme-ui";
+import { jsx, useColorMode } from "theme-ui";
 
-export default () => (
-  <div>
-    <pre
-      sx={{ fontSize: ["0.3vw", ".1rem", ".125rem"] }}
-    >{`.............................................................................................                                                                                                                                                                              .......                        .                                        .                                                                                                                                                                            
+export default () => {
+  const [colorMode] = useColorMode();
+  const isLightMode = colorMode !== "dark";
+  const color = isLightMode ? "muted" : "text";
+  const bg = isLightMode ? "secondary" : "background";
+  return (
+    <div>
+      <pre
+        sx={{ fontSize: ["0.3vw", ".1rem", ".125rem"], color, bg }}
+      >{`.............................................................................................                                                                                                                                                                              .......                        .                                        .                                                                                                                                                                            
 ...........................................................................................                                                                                                                                                                                       ...                                                                                                                                                                                                                                           
 ..........................................................................................                                                                                                                                                                                                                                                                                                                                                                                                                                      
 .........................................................................................                                                                                                                                                                                                                            ..                                                                                                                                                                                                         
@@ -262,5 +267,6 @@ export default () => (
                                                                                                                                                                                                                                                                                                           ..',,,'....'',,,;,,:;,:;,;:,,;,,,,,,,,''''',,,'.''.'',;;::::::;;;;:;;;;,,,''''........'''',,,,,;;;;;;;:::::::::::;;:::::ccc::::cccccccccccccccclccccccclllllcccclllllloollllllllllllllllllllc::;;::::cccclllllllllllcc
                                                                                                                                                                                                                                                                                                             ..,,,'......''',',,'',,,,,'''''''''''''..'..''',,;;::::::;;;;,,;,,,,'''''.........'',,,,,,,,;;;;:::::::::::::::::::::ccc:::::ccccccccccccccccccccccllllccclcllloooooollllllllllllllllooll::;;;::ccccclllllllllllcccc
                                                                                                                                                                                                                                                                                                              ..';;,'...'...''.'''',,'......''.''.......',;;;;::;;;;;;;,;,,,,,''''''.........''',,,,,,,,;;;;::::::::;;::::;::;::cccc::cccccccccccccccccccccccccclllccccclllooooooolcllllllllllllloolc::;;;:::cclllllllllllccccccc`}</pre>
-  </div>
-);
+    </div>
+  );
+};

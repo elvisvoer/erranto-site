@@ -5,6 +5,18 @@ import Layout from "../../components/layout";
 import Seo from "../../components/seo";
 import Prompt from "../../components/prompt";
 
+const CommentsSection = () => {
+  return (
+    <Utterances
+      repo="elvisvoer/erranto-comments"
+      issue-term="pathname"
+      theme="preferred-color-scheme"
+      crossorigin="anonymous"
+      async={false}
+    />
+  );
+};
+
 const BlogPost = ({ data, children }) => {
   return (
     <Layout>
@@ -16,13 +28,7 @@ const BlogPost = ({ data, children }) => {
       <p>Posted: {data.mdx.frontmatter.date}</p>
       {children}
       <hr style={{ color: "inherit" }} />
-      <Utterances
-        repo="elvisvoer/erranto-comments"
-        issue-term="pathname"
-        theme="dark-blue"
-        crossorigin="anonymous"
-        async={false}
-      />
+      <CommentsSection />
     </Layout>
   );
 };
