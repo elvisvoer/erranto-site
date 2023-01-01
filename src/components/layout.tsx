@@ -13,8 +13,6 @@ import Logo from "./logo";
 import Prompt from "./prompt";
 import Footer from "./footer";
 
-import { navLinks, navLinkItem } from "./layout.module.css";
-
 type LayoutProps = {
   children: React.ReactNode | React.ReactNode[];
 };
@@ -22,6 +20,17 @@ type LayoutProps = {
 const themeLink = {
   textDecoration: "underline",
   cursor: "pointer",
+};
+
+const navLinks = {
+  display: "flex",
+  listStyle: "none",
+  paddingLeft: 0,
+  margin: 0,
+};
+
+const navLinkItem = {
+  paddingRight: "2rem",
 };
 
 const ThemeChanger = () => {
@@ -60,6 +69,11 @@ const Layout = ({ children }: LayoutProps) => {
           flexDirection: "column",
           minHeight: "100vh",
         }}
+        css={`
+          a {
+            color: inherit;
+          }
+        `}
       >
         <div sx={{ marginBottom: 3 }}>
           <InitializeColorMode />
@@ -70,14 +84,14 @@ const Layout = ({ children }: LayoutProps) => {
           <span>
             <Prompt /> ls
           </span>
-          <ul className={navLinks}>
-            <li className={navLinkItem}>
+          <ul style={navLinks}>
+            <li style={navLinkItem}>
               <Link to="/">blog</Link>
             </li>
-            <li className={navLinkItem}>
+            <li style={navLinkItem}>
               <Link to="/about">about.mdx</Link>
             </li>
-            <li className={navLinkItem}>
+            <li style={navLinkItem}>
               <Link to="/rss.xml">rss.xml</Link>
             </li>
           </ul>
