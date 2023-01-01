@@ -32,7 +32,9 @@ const ThemeChanger = () => {
 
   return (
     <>
-      <div>Color mode: {colorMode !== "dark" ? "light" : "dark"}</div>
+      <div>
+        Color mode: {colorMode && colorMode.replace("default", "light")}
+      </div>
       <div>
         Available color modes:{" "}
         <span style={themeLink} onClick={() => setDarkMode(false)}>
