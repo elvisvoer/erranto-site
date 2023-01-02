@@ -36,7 +36,8 @@ const IndexPage = () => {
       <div>
         <Prompt /> ls -l blog/
       </div>
-      <div>total {totalSize}</div>
+      <h2>Recent Posts</h2>
+      <div>Total size: {totalSize} bytes</div>
       <table sx={{ width: "100%" }}>
         <tbody>
           {data.allMdx.nodes

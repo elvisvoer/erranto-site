@@ -27,7 +27,7 @@ const TagsPage = ({
       <div>
         <Prompt /> grep -rnw blog/ -e '*'
       </div>
-      <h2>All tags:</h2>
+      <h2>All tags</h2>
       <div>
         {group.map((tag: any) => (
           <div key={tag.fieldValue}>
