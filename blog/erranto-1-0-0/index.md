@@ -50,7 +50,7 @@ of dynamic pages for each blog post tag.
 
 ## What's next
 
-So far Erranto is a pretty simple blogging website but I am quite excited with the results. Now that I reached
+So far, Erranto is a pretty simple blogging website but I am quite excited with the results. Now that I reached
 the first "stable" version, I can focus on writing and other projects, and only do small changes when needed.
 
 /Elvis
