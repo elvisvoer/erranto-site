@@ -68,7 +68,7 @@ const config: GatsbyConfig = {
                   date: node.frontmatter.date,
                   url: `${site.siteMetadata.siteUrl}/blog/${node.frontmatter.slug}`,
                   guid: `${site.siteMetadata.siteUrl}/blog/${node.frontmatter.slug}`,
-                  custom_elements: [{ "content:encoded": node.body }],
+                  custom_elements: [{ "content:encoded": node.html }],
                 });
               });
             },
@@ -77,7 +77,7 @@ const config: GatsbyConfig = {
                 allMarkdownRemark(sort: { frontmatter: { date: DESC } }) {
                   nodes {
                     excerpt
-                    body
+                    html
                     frontmatter {
                       slug
                       title
