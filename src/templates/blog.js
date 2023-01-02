@@ -18,9 +18,7 @@ const CommentsSection = () => {
   );
 };
 
-const BlogPost = ({ data, children, ...rest }) => {
-  console.log({ data, children, rest });
-
+const BlogPost = ({ data, children }) => {
   return (
     <Layout>
       <div>
