@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, graphql } from "gatsby";
-
+/** @jsx jsx */
+import { jsx } from "theme-ui";
 import Layout from "../components/layout";
 import Seo from "../components/seo";
 import Prompt from "../components/prompt";
@@ -15,9 +16,16 @@ export const pageQuery = graphql`
       totalCount
       edges {
         node {
+          id
           frontmatter {
-            title
             slug
+            date(formatString: "MMMM D, YYYY")
+          }
+          parent {
+            id
+            ... on File {
+              size
+            }
           }
         }
       }
@@ -32,6 +40,12 @@ const Tags = ({ pageContext, data }) => {
     totalCount === 1 ? "" : "s"
   } tagged with "${tag}"`;
 
+  const totalSize = data.allMdx.edges
+    .map(({ node }) => node)
+    .reduce((acc, node) => {
+      return acc + node.parent.size;
+    }, 0);
+
   return (
     <Layout>
       <div>
@@ -39,18 +53,32 @@ const Tags = ({ pageContext, data }) => {
         <Link to="/blog/tags">view all</Link>)
       </div>
       <h2>{tagHeader}</h2>
-      <div>
-        {edges.map(({ node }) => {
-          const { title, slug } = node.frontmatter;
-          return (
-            <div key={slug}>
-              - <Link to={`/blog/${slug}`}>{title}</Link>
-            </div>
-          );
-        })}
-      </div>
+      <div>Total size: {totalSize} bytes</div>
+      <table sx={{ width: "100%" }}>
+        <tbody>
+          {edges.map(
+            ({ node }) =>
+              node.frontmatter.slug && (
+                <tr key={node.id}>
+                  <td>elvis</td>
+                  <td>{node.parent.size}</td>
+                  <td>{node.frontmatter.date}</td>
+                  <td>
+                    <Link to={`/blog/${node.frontmatter.slug}`}>
+                      {node.frontmatter.slug}.mdx
+                    </Link>
+                  </td>
+                </tr>
+              )
+          )}
+        </tbody>
+      </table>
     </Layout>
   );
 };
 
 export default Tags;
+
+export const Head = ({ pageContext }) => (
+  <Seo title={`Blog - ${pageContext.tag}`} />
+);

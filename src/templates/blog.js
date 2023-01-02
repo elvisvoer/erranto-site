@@ -18,6 +18,19 @@ const CommentsSection = () => {
   );
 };
 
+export const query = graphql`
+  query ($id: String) {
+    mdx(id: { eq: $id }) {
+      frontmatter {
+        title
+        date(formatString: "MMMM D, YYYY")
+        slug
+        tags
+      }
+    }
+  }
+`;
+
 const BlogPost = ({ data, children }) => {
   return (
     <Layout>
@@ -45,19 +58,6 @@ const BlogPost = ({ data, children }) => {
     </Layout>
   );
 };
-
-export const query = graphql`
-  query ($id: String) {
-    mdx(id: { eq: $id }) {
-      frontmatter {
-        title
-        date(formatString: "MMMM D, YYYY")
-        slug
-        tags
-      }
-    }
-  }
-`;
 
 export const Head = ({ data }) => <Seo title={data.mdx.frontmatter.title} />;
 
