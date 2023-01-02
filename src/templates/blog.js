@@ -1,9 +1,10 @@
 import * as React from "react";
-import { graphql } from "gatsby";
+import { Link, graphql } from "gatsby";
+import kebabCase from "lodash/kebabCase";
 import Utterances from "utterances-react";
-import Layout from "../../components/layout";
-import Seo from "../../components/seo";
-import Prompt from "../../components/prompt";
+import Layout from "../components/layout";
+import Seo from "../components/seo";
+import Prompt from "../components/prompt";
 
 const CommentsSection = () => {
   return (
@@ -21,11 +22,23 @@ const BlogPost = ({ data, children }) => {
   return (
     <Layout>
       <div>
-        <Prompt />
-        cat blog/{data.mdx.frontmatter.slug}.mdx | mdx-viewer
+        <Prompt /> cat blog/{data.mdx.frontmatter.slug}.mdx | mdx-viewer
       </div>
       <h1>{data.mdx.frontmatter.title}</h1>
-      <p>Posted: {data.mdx.frontmatter.date}</p>
+      <div>
+        <div>Posted: {data.mdx.frontmatter.date}</div>
+        {data.mdx.frontmatter.tags && (
+          <div>
+            Tags:{" "}
+            {data.mdx.frontmatter.tags.map((t, i, a) => (
+              <span key={t}>
+                <Link to={`/blog/tags/${kebabCase(t)}`}>{t}</Link>
+                {i < a.length - 1 && ", "}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
       {children}
       <hr style={{ color: "inherit" }} />
       <CommentsSection />
@@ -40,6 +53,7 @@ export const query = graphql`
         title
         date(formatString: "MMMM D, YYYY")
         slug
+        tags
       }
     }
   }

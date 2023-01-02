@@ -10,8 +10,7 @@ const AboutPage = () => {
   return (
     <Layout>
       <div>
-        <Prompt />
-        cat about.mdx | mdx-viewer
+        <Prompt /> cat about.mdx | mdx-viewer
       </div>
       <h1>About me</h1>
       <div>Welcome to my little universe!</div>
