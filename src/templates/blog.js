@@ -55,7 +55,7 @@ const BlogPost = ({ data }) => {
         )}
       </div>
       <div dangerouslySetInnerHTML={{ __html: data.markdownRemark.html }} />
-      <hr style={{ color: "inherit" }} />
+      <hr />
       <CommentsSection />
     </Layout>
   );

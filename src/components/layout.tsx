@@ -73,6 +73,13 @@ const Layout = ({ children }: LayoutProps) => {
           a {
             color: inherit;
           }
+
+          hr {
+            border: 0;
+            height: 0;
+            border-top: 1px dashed rgba(0, 0, 0, 0.5);
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.5);
+          }
         `}
       >
         <div sx={{ marginBottom: 3 }}>
