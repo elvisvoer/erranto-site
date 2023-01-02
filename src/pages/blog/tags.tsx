@@ -25,7 +25,7 @@ const TagsPage = ({
   <Layout>
     <div>
       <div>
-        <Prompt /> grep -rnw blog/ -e '*'
+      <Prompt /> grep -Ril "*" blog/
       </div>
       <h2>All tags</h2>
       <div>

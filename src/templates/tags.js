@@ -49,8 +49,10 @@ const Tags = ({ pageContext, data }) => {
   return (
     <Layout>
       <div>
-        <Prompt /> grep -rnw blog/ -e '{tag}' (
-        <Link to="/blog/tags">view all</Link>)
+        <Prompt /> grep -Ril "{tag}" blog/ #{" "}
+        <Link to="/blog/tags" style={{ display: "inline-block" }}>
+          view all tags
+        </Link>
       </div>
       <h2>{tagHeader}</h2>
       <div>Total size: {totalSize} bytes</div>
