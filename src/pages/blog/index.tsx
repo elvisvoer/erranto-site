@@ -34,8 +34,7 @@ const IndexPage = () => {
   return (
     <Layout>
       <div>
-        <Prompt />
-        ls -l blog/
+        <Prompt /> ls -l blog/
       </div>
       <div>total {totalSize}</div>
       <table sx={{ width: "100%" }}>

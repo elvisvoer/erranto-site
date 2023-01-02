@@ -24,8 +24,7 @@ const BlogPost = ({ data, children, ...rest }) => {
   return (
     <Layout>
       <div>
-        <Prompt />
-        cat blog/{data.mdx.frontmatter.slug}.mdx | mdx-viewer
+        <Prompt /> cat blog/{data.mdx.frontmatter.slug}.mdx | mdx-viewer
       </div>
       <h1>{data.mdx.frontmatter.title}</h1>
       <div>
