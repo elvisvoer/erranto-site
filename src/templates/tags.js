@@ -8,7 +8,7 @@ import Prompt from "../components/prompt";
 
 export const pageQuery = graphql`
   query ($tag: String) {
-    allMdx(
+    allMarkdownRemark(
       limit: 2000
       sort: { frontmatter: { date: DESC } }
       filter: { frontmatter: { tags: { in: [$tag] } } }
@@ -35,12 +35,12 @@ export const pageQuery = graphql`
 
 const Tags = ({ pageContext, data }) => {
   const { tag } = pageContext;
-  const { edges, totalCount } = data.allMdx;
+  const { edges, totalCount } = data.allMarkdownRemark;
   const tagHeader = `${totalCount} post${
     totalCount === 1 ? "" : "s"
   } tagged with "${tag}"`;
 
-  const totalSize = data.allMdx.edges
+  const totalSize = data.allMarkdownRemark.edges
     .map(({ node }) => node)
     .reduce((acc, node) => {
       return acc + node.parent.size;

@@ -8,7 +8,7 @@ import Prompt from "../../components/prompt";
 
 export const pageQuery = graphql`
   query {
-    allMdx(limit: 2000) {
+    allMarkdownRemark(limit: 2000) {
       group(field: { frontmatter: { tags: SELECT } }) {
         fieldValue
         totalCount
@@ -19,7 +19,7 @@ export const pageQuery = graphql`
 
 const TagsPage = ({
   data: {
-    allMdx: { group },
+    allMarkdownRemark: { group },
   },
 }: any) => (
   <Layout>

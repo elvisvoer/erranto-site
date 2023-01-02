@@ -9,7 +9,7 @@ import Prompt from "../../components/prompt";
 const IndexPage = () => {
   const data = useStaticQuery(graphql`
     query {
-      allMdx(sort: { frontmatter: { date: DESC } }) {
+      allMarkdownRemark(sort: { frontmatter: { date: DESC } }) {
         nodes {
           frontmatter {
             slug
@@ -27,7 +27,7 @@ const IndexPage = () => {
     }
   `);
 
-  const totalSize = data.allMdx.nodes.reduce((acc: number, node: any) => {
+  const totalSize = data.allMarkdownRemark.nodes.reduce((acc: number, node: any) => {
     return acc + node.parent.size;
   }, 0);
 
@@ -40,7 +40,7 @@ const IndexPage = () => {
       <div>Total size: {totalSize} bytes</div>
       <table sx={{ width: "100%" }}>
         <tbody>
-          {data.allMdx.nodes
+          {data.allMarkdownRemark.nodes
             .filter((n: any) => n)
             .map(
               (node: any) =>
