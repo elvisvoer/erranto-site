@@ -27,15 +27,17 @@ const BlogPost = ({ data, children }) => {
       <h1>{data.mdx.frontmatter.title}</h1>
       <div>
         <div>Posted: {data.mdx.frontmatter.date}</div>
-        <div>
-          Tags:{" "}
-          {data.mdx.frontmatter.tags.map((t, i, a) => (
-            <span key={t}>
-              <Link to={`/blog/tags/${kebabCase(t)}`}>{t}</Link>
-              {i < a.length - 1 && ", "}
-            </span>
-          ))}
-        </div>
+        {data.mdx.frontmatter.tags && (
+          <div>
+            Tags:{" "}
+            {data.mdx.frontmatter.tags.map((t, i, a) => (
+              <span key={t}>
+                <Link to={`/blog/tags/${kebabCase(t)}`}>{t}</Link>
+                {i < a.length - 1 && ", "}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
       {children}
       <hr style={{ color: "inherit" }} />
