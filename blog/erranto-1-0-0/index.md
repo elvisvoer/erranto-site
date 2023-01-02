@@ -10,7 +10,7 @@ tags:
 
 What a year it has been, but on that later! For now I am excited to say that
 my little project has reached an important milestone. Erranto is now at version
-v1.0.0.
+~v1.0.0~v1.1.0 (fake news, I already added some improvements).
 
 ## The idea
 
