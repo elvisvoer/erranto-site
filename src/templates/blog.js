@@ -20,7 +20,8 @@ const CommentsSection = () => {
 
 export const query = graphql`
   query ($id: String) {
-    mdx(id: { eq: $id }) {
+    markdownRemark(id: { eq: $id }) {
+      html
       frontmatter {
         title
         date(formatString: "MMMM D, YYYY")
@@ -31,19 +32,20 @@ export const query = graphql`
   }
 `;
 
-const BlogPost = ({ data, children }) => {
+const BlogPost = ({ data }) => {
   return (
     <Layout>
       <div>
-        <Prompt /> cat blog/{data.mdx.frontmatter.slug}.mdx | mdx-viewer
+        <Prompt /> cat blog/{data.markdownRemark.frontmatter.slug}.mdx |
+        mdx-viewer
       </div>
-      <h1>{data.mdx.frontmatter.title}</h1>
+      <h1>{data.markdownRemark.frontmatter.title}</h1>
       <div>
-        <div>Posted: {data.mdx.frontmatter.date}</div>
-        {data.mdx.frontmatter.tags && (
+        <div>Posted: {data.markdownRemark.frontmatter.date}</div>
+        {data.markdownRemark.frontmatter.tags && (
           <div>
             Tags:{" "}
-            {data.mdx.frontmatter.tags.map((t, i, a) => (
+            {data.markdownRemark.frontmatter.tags.map((t, i, a) => (
               <span key={t}>
                 <Link to={`/blog/tags/${kebabCase(t)}`}>{t}</Link>
                 {i < a.length - 1 && ", "}
@@ -52,13 +54,15 @@ const BlogPost = ({ data, children }) => {
           </div>
         )}
       </div>
-      {children}
+      <div dangerouslySetInnerHTML={{ __html: data.markdownRemark.html }} />
       <hr style={{ color: "inherit" }} />
       <CommentsSection />
     </Layout>
   );
 };
 
-export const Head = ({ data }) => <Seo title={data.mdx.frontmatter.title} />;
+export const Head = ({ data }) => (
+  <Seo title={data.markdownRemark.frontmatter.title} />
+);
 
 export default BlogPost;

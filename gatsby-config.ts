@@ -18,7 +18,7 @@ const config: GatsbyConfig = {
         icon: "src/images/icon.png",
       },
     },
-    "gatsby-plugin-mdx",
+    "gatsby-transformer-remark",
     "gatsby-plugin-sharp",
     "gatsby-transformer-sharp",
     {
@@ -60,8 +60,8 @@ const config: GatsbyConfig = {
         `,
         feeds: [
           {
-            serialize: ({ query: { site, allMdx } }: any) => {
-              return allMdx.nodes.map((node: any) => {
+            serialize: ({ query: { site, allMarkdownRemark } }: any) => {
+              return allMarkdownRemark.nodes.map((node: any) => {
                 return Object.assign({}, node.frontmatter, {
                   description: node.excerpt,
                   title: node.frontmatter.title,
@@ -74,7 +74,7 @@ const config: GatsbyConfig = {
             },
             query: `
               {
-                allMdx(sort: { frontmatter: { date: DESC } }) {
+                allMarkdownRemark(sort: { frontmatter: { date: DESC } }) {
                   nodes {
                     excerpt
                     body
