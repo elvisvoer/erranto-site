@@ -45,7 +45,7 @@ So, for simplicity, I chose to use the free tier of Gatsby Cloud provider.
 
 Deployments are as simple as pushing a commit to `main`, so I've already been
 pushing changes a few times a day (continuos delivery, ftw!). So far, so good,
-`git` and Github for deployments and Gatsby Cloud for hosting.
+`git` and Github for deployments, and Gatsby Cloud for hosting.
 
 But wait, no software is complete without some form of monitoring!
 
