@@ -42,7 +42,7 @@ Yey, still serverless!
 ### The View
 
 Blog post pages are created using a React template file that combines the markdown with other page elements,
-such as layout, metadata, or the comments section. I have been using React for the past six years, so adding
+such as layout, metadata, or the comments section. I have been using React for the past seven years, so adding
 more functionality was a breeze. My favorite feature so far is the implementation of tags, which utilizes the
 page context to pass variables to the tag's page GraphQL query, resulting in "dynamic" generation of static pages
 for each blog post tag.
