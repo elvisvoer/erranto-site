@@ -56,7 +56,7 @@ Since the [last update](/blog/so-far-so-good) I managed to:
 - fix the broken `/blog` page
 - switch `theme-ui` theme to _Tosh_ and add light/dark mode
 - add footnote support by switching to `gatsby-transformer-remark`
-- add [rss feed](/feed.rss)
+- add [rss feed](/rss.xml)
 - add comments section powered by [utterances](https://utteranc.es/)
 - make small layout adjustments
 
