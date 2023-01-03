@@ -7,7 +7,7 @@ import Prompt from "./prompt";
 export default () => (
   <footer>
     <div>
-      <Prompt /> echo $COPYRIGHT
+      <Prompt /> echo $NOTICE
     </div>
     <pre sx={{ fontSize: ["2.15vw", ".7rem", "1.07rem"] }}>
       {`*************************************************************************
