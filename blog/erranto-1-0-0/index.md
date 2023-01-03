@@ -41,17 +41,29 @@ Yey, still serverless!
 
 ### The View
 
-Blog post pages are created using a React template file that combines the markdown with other elements
-such as layout, metadata, and a comments section. I have been using React for the past six years, so adding
-theming and light/dark color modes was a breeze. I also made some layout adjustments and simplified some
-components since the [last update](/blog/so-far-so-good). One grate feature is the implementation of tags,
-which utilizes the page context to pass variables to the tag's page GraphQL query, resulting in the generation
-of dynamic pages for each blog post tag.
+Blog post pages are created using a React template file that combines the markdown with other page elements,
+such as layout, metadata, or the comments section. I have been using React for the past six years, so adding
+more functionality was a breeze. My favorite feature so far is the implementation of tags, which utilizes the
+page context to pass variables to the tag's page GraphQL query, resulting in "dynamic" generation of static pages
+for each blog post tag.
+
+## Changelog
+
+Since the [last update](/blog/so-far-so-good) I managed to:
+
+- use page tracking only on production URL
+- add tags to blog posts
+- fix the broken `/blog` page
+- switch `theme-ui` theme to _Tosh_ and add light/dark mode
+- add footnote support by switching to `gatsby-transformer-remark`
+- add [rss feed](/feed.rss)
+- add comments section powered by [utterances](https://utteranc.es/)
+- make small layout adjustments
 
 ## What's next
 
-So far, Erranto is a pretty simple blogging website but I am quite excited with the results. Now that I reached
-the first "stable" version, I can focus on writing and other projects, and only do small changes when needed.
+Erranto is a basic blogging website, but I am happy with how it has turned out. Now that I have reached the
+first "stable" version, I can focus on writing and other projects and only make small changes when necessary.
 
 /Elvis
 
