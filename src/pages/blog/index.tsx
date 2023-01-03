@@ -6,7 +6,7 @@ import Seo from "../../components/seo";
 import Layout from "../../components/layout";
 import Prompt from "../../components/prompt";
 
-const IndexPage = () => {
+export const IndexPage = () => {
   const data = useStaticQuery(graphql`
     query {
       allMarkdownRemark(sort: { frontmatter: { date: DESC } }) {
