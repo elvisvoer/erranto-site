@@ -64,7 +64,7 @@ const Layout = ({ children }: LayoutProps) => {
       <Themed.root
         sx={{
           padding: 2,
-          maxWidth: 768,
+          maxWidth: 810,
           display: "flex",
           flexDirection: "column",
           minHeight: "100vh",
