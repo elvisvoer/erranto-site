@@ -2,6 +2,7 @@
 title: "Erranto v1.0.0"
 slug: "erranto-1-0-0"
 date: "2023-01-02"
+modified: "2023-01-03"
 tags:
   - erranto
   - programming

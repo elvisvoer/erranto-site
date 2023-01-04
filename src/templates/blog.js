@@ -25,6 +25,7 @@ export const query = graphql`
       frontmatter {
         title
         date(formatString: "MMMM D, YYYY")
+        modified(formatString: "MMMM D, YYYY")
         slug
         tags
       }
@@ -42,6 +43,9 @@ const BlogPost = ({ data }) => {
       <h1>{data.markdownRemark.frontmatter.title}</h1>
       <div>
         <div>Posted: {data.markdownRemark.frontmatter.date}</div>
+        {data.markdownRemark.frontmatter.modified && (
+          <div>Modified: {data.markdownRemark.frontmatter.modified}</div>
+        )}
         {data.markdownRemark.frontmatter.tags && (
           <div>
             Tags:{" "}
