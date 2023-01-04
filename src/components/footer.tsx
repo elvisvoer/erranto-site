@@ -9,7 +9,7 @@ export default () => (
     <div>
       <Prompt /> echo $NOTICE
     </div>
-    <pre sx={{ fontSize: ["2.15vw", "1.07rem", "1.07rem"] }}>
+    <pre sx={{ fontSize: ["2.15vw", "1rem", "1rem"] }}>
       {`*************************************************************************
 *                                                                       *
 *                           COPYRIGHT NOTICE                            *

@@ -11,7 +11,7 @@ export default () => {
     <div>
       <pre
         sx={{
-          fontSize: ["0.3vw", ".15rem", ".15rem"],
+          fontSize: "0.07rem",
           color,
           bg,
           width: "fit-content",
