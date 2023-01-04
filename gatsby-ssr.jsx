@@ -31,16 +31,10 @@ const HeadComponents = [
   `}</style>,
 ];
 
-const BodyAttributes = {
-  "data-theme": "dark",
-};
-
 exports.onRenderBody = ({
   setHeadComponents,
   setHtmlAttributes,
-  setBodyAttributes,
 }) => {
   setHtmlAttributes(HtmlAttributes);
   setHeadComponents(HeadComponents);
-  setBodyAttributes(BodyAttributes);
 };
