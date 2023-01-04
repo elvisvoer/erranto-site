@@ -4,6 +4,7 @@ import { Link } from "gatsby";
 import {
   jsx,
   ThemeProvider,
+  InitializeColorMode,
   useColorMode,
 } from "theme-ui";
 import { Themed } from "@theme-ui/mdx";
@@ -89,6 +90,7 @@ const Layout = ({ children }: LayoutProps) => {
         `}
       >
         <div sx={{ marginBottom: 3 }}>
+          <InitializeColorMode />
           <Logo />
           <ThemeChanger />
         </div>
