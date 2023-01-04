@@ -8,14 +8,14 @@ tags:
   - "2022"
 ---
 
-What a year it has been, but on that later! For now I am excited to say that
+What a year it has been, but on that later! For now, I am excited to say that
 my little project has reached an important milestone. Erranto is now at version
 ~v1.0.0~v1.1.0 (fake news, I already added some improvements).
 
 ## The idea
 
 If you've just landed on this page, let me tell you what's up. Erranto is meant to
-be my online face to the world, last year I've been doing some [social media cleansing](/blog/social-media-cleansing)
+be my online face to the world. Last year I've been doing some [social media cleansing](/blog/social-media-cleansing)
 and I've decided to finally have my own website where I can blog and also do some coding
 experiments.
 
