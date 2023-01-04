@@ -1,12 +1,12 @@
 ---
 title: "Social media cleansing"
 slug: "social-media-cleansing"
-date: "2022-12-16"
+created: "2022-12-16"
 ---
 
 I remember the early days of social media interaction when I would got to an internet cafe
 just to have a chat on mIRC with someone from my community. If I was lucky, I would even get to
-have a blind date. Those years seem like ages ago and a lot has changed, gone are the days
+have a blind created. Those years seem like ages ago and a lot has changed, gone are the days
 of mIRC, HI5, MySpace, and Yahoo Messenger.
 
 I've never been a big fan of Twitter so my social media activity revolved around Facebook,

@@ -9,11 +9,11 @@ import Prompt from "../../components/prompt";
 export const IndexPage = () => {
   const data = useStaticQuery(graphql`
     query {
-      allMarkdownRemark(sort: { frontmatter: { date: DESC } }) {
+      allMarkdownRemark(sort: { frontmatter: { created: DESC } }) {
         nodes {
           frontmatter {
             slug
-            date(formatString: "MMMM D, YYYY")
+            created(formatString: "MMMM D, YYYY")
           }
           id
           parent {
@@ -48,7 +48,7 @@ export const IndexPage = () => {
                   <tr key={node.id}>
                     <td>elvis</td>
                     <td>{node.parent.size}</td>
-                    <td>{node.frontmatter.date}</td>
+                    <td>{node.frontmatter.created}</td>
                     <td>
                       <Link to={`/blog/${node.frontmatter.slug}`}>
                         {node.frontmatter.slug}.mdx

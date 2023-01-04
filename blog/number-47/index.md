@@ -1,7 +1,7 @@
 ---
 title: "The 47th commit"
 slug: "number-47"
-date: "2022-12-15"
+created: "2022-12-15"
 tags:
   - programming
   - erranto

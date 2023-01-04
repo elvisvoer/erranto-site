@@ -65,7 +65,7 @@ const config: GatsbyConfig = {
                 return Object.assign({}, node.frontmatter, {
                   description: node.excerpt,
                   title: node.frontmatter.title,
-                  date: node.frontmatter.date,
+                  created: node.frontmatter.created,
                   url: `${site.siteMetadata.siteUrl}/blog/${node.frontmatter.slug}`,
                   guid: `${site.siteMetadata.siteUrl}/blog/${node.frontmatter.slug}`,
                   custom_elements: [{ "content:encoded": node.html }],
@@ -74,14 +74,14 @@ const config: GatsbyConfig = {
             },
             query: `
               {
-                allMarkdownRemark(sort: { frontmatter: { date: DESC } }) {
+                allMarkdownRemark(sort: { frontmatter: { created: DESC } }) {
                   nodes {
                     excerpt
                     html
                     frontmatter {
                       slug
                       title
-                      date(formatString: "MMMM D, YYYY")
+                      created(formatString: "MMMM D, YYYY")
                     }
                   }
                 }

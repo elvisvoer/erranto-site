@@ -1,7 +1,7 @@
 ---
 title: "Hello, World!"
 slug: "hello-world"
-date: "2022-12-14"
+created: "2022-12-14"
 tags:
   - erranto
 ---

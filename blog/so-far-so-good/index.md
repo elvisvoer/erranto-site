@@ -1,7 +1,7 @@
 ---
 title: "So far, so good"
 slug: "so-far-so-good"
-date: "2022-12-18"
+created: "2022-12-18"
 tags:
   - programming
   - erranto

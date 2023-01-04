@@ -10,7 +10,7 @@ export const pageQuery = graphql`
   query ($tag: String) {
     allMarkdownRemark(
       limit: 2000
-      sort: { frontmatter: { date: DESC } }
+      sort: { frontmatter: { created: DESC } }
       filter: { frontmatter: { tags: { in: [$tag] } } }
     ) {
       totalCount
@@ -19,7 +19,7 @@ export const pageQuery = graphql`
           id
           frontmatter {
             slug
-            date(formatString: "MMMM D, YYYY")
+            created(formatString: "MMMM D, YYYY")
           }
           parent {
             id
@@ -64,7 +64,7 @@ const Tags = ({ pageContext, data }) => {
                 <tr key={node.id}>
                   <td>elvis</td>
                   <td>{node.parent.size}</td>
-                  <td>{node.frontmatter.date}</td>
+                  <td>{node.frontmatter.created}</td>
                   <td>
                     <Link to={`/blog/${node.frontmatter.slug}`}>
                       {node.frontmatter.slug}.mdx
