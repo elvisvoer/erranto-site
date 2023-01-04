@@ -65,7 +65,7 @@ const config: GatsbyConfig = {
                 return Object.assign({}, node.frontmatter, {
                   description: node.excerpt,
                   title: node.frontmatter.title,
-                  created: node.frontmatter.created,
+                  date: node.frontmatter.created,
                   url: `${site.siteMetadata.siteUrl}/blog/${node.frontmatter.slug}`,
                   guid: `${site.siteMetadata.siteUrl}/blog/${node.frontmatter.slug}`,
                   custom_elements: [{ "content:encoded": node.html }],
