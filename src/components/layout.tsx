@@ -64,30 +64,11 @@ const Layout = ({ children }: LayoutProps) => {
       <Themed.root
         sx={{
           padding: 2,
-          maxWidth: 810,
+          maxWidth: 760,
           display: "flex",
           flexDirection: "column",
           minHeight: "100vh",
         }}
-        css={`
-          a {
-            color: inherit;
-          }
-
-          hr {
-            border: 0;
-            height: 0;
-            border-top: 1px dashed rgba(0, 0, 0, 0.5);
-            border-bottom: 1px dashed rgba(255, 255, 255, 0.5);
-          }
-
-          code {
-            /* not sure why code needs a fix for explicit font-size declared on html tag */
-            font-size: 0.8rem;
-            /* also apply color, now that we are at it */
-            color: var(--theme-ui-colors-accent);
-          }
-        `}
       >
         <div sx={{ marginBottom: 3 }}>
           <InitializeColorMode />
