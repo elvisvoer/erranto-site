@@ -69,6 +69,8 @@ const config: GatsbyConfig = {
                   url: `${site.siteMetadata.siteUrl}/blog/${node.frontmatter.slug}`,
                   guid: `${site.siteMetadata.siteUrl}/blog/${node.frontmatter.slug}`,
                   custom_elements: [{ "content:encoded": node.html }],
+                  author: "Elvis Adomnica",
+                  categories: node.frontmatter.tags,
                 });
               });
             },
@@ -81,6 +83,7 @@ const config: GatsbyConfig = {
                     frontmatter {
                       slug
                       title
+                      tags
                       created(formatString: "MMMM D, YYYY")
                     }
                   }
