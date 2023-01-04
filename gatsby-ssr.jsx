@@ -5,7 +5,13 @@ const HtmlAttributes = {
   lang: "en",
 };
 
-const HeadComponents = [];
+const HeadComponents = [
+  <style>{`
+  html {
+    font-size: 18px;
+  }
+  `}</style>,
+];
 
 const BodyAttributes = {
   "data-theme": "dark",
