@@ -75,6 +75,7 @@ first "stable" version, I can focus on writing and other projects and only make 
         title: "Erranto v1.0.0"
         slug: "erranto-1-0-0"
         created: "2023-01-02"
+        modified: "2023-01-03"
         tags:
           - erranto
           - programming
