@@ -29,12 +29,16 @@ const HeadComponents = [
     color: var(--theme-ui-colors-accent);
   }
   `}</style>,
+  <script
+    async
+    defer
+    src="https://analytics.umami.is/script.js"
+    data-website-id="3e8f8c7e-de17-40c6-bc2e-5362a6cc6cf8"
+    data-domains="erranto.com,errantositemain.gatsbyjs.io"
+  ></script>,
 ];
 
-exports.onRenderBody = ({
-  setHeadComponents,
-  setHtmlAttributes,
-}) => {
+exports.onRenderBody = ({ setHeadComponents, setHtmlAttributes }) => {
   setHtmlAttributes(HtmlAttributes);
   setHeadComponents(HeadComponents);
 };
