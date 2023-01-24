@@ -1,4 +1,3 @@
-import React from "react";
 import { Link, graphql } from "gatsby";
 /** @jsx jsx */
 import { jsx } from "theme-ui";
