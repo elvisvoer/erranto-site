@@ -30,6 +30,7 @@ const HeadComponents = [
   }
   `}</style>,
   <script
+    key="umami-analytics"
     async
     defer
     src="https://analytics.umami.is/script.js"
