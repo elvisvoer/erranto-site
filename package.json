@@ -18,7 +18,7 @@
     "@emotion/react": "^11.10.5",
     "@mdx-js/react": "^2.2.1",
     "@theme-ui/mdx": "^0.15.4",
-    "@theme-ui/preset-deep": "^0.15.4",
+    "@theme-ui/preset-deep": "^0.15.5",
     "@theme-ui/style-guide": "^0.15.4",
     "figlet": "^1.5.2",
     "gatsby": "^5.5.0",
