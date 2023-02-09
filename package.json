@@ -33,7 +33,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
-    "theme-ui": "^0.15.4",
+    "theme-ui": "^0.15.5",
     "utterances-react": "^0.1.3"
   },
   "devDependencies": {
