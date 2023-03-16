@@ -14,7 +14,7 @@ export default () => (
 *                                                                       *
 *                           COPYRIGHT NOTICE                            *
 *                                                                       *
-*  Copyright (C) 2022-2023 Elvis-Eduard Adomnică. All rights reserved.  *
+*       Copyright (C) 2022-2023 erranto.com. All rights reserved.       *
 *                                                                       *
 *************************************************************************`}
     </pre>
