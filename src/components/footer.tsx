@@ -9,14 +9,14 @@ export default () => (
     <div>
       <Prompt /> echo $NOTICE
     </div>
-    <pre sx={{ fontSize: ["2.15vw", "1rem", "1rem"] }}>
-      {`*************************************************************************
-*                                                                       *
-*                           COPYRIGHT NOTICE                            *
-*                                                                       *
-*       Copyright (C) 2022-2023 erranto.com. All rights reserved.       *
-*                                                                       *
-*************************************************************************`}
+    <pre sx={{ fontSize: ["2.42vw", "1.12rem", "1.12rem"] }}>
+      {`*****************************************************************
+*                                                               *
+*                       COPYRIGHT NOTICE                        *
+*                                                               *
+*   Copyright (C) 2022-2023 erranto.com. All rights reserved.   *
+*                                                               *
+*****************************************************************`}
     </pre>
   </footer>
 );

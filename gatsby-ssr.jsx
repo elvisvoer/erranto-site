@@ -8,7 +8,7 @@ const HtmlAttributes = {
 const HeadComponents = [
   <style key="custom-styles">{`
   html {
-    font-size: 17px;
+    font-size: 18px;
   }
 
   a {
