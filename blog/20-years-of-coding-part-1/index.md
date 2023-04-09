@@ -133,7 +133,8 @@ next Monday, I would just read it and resume from where I left. It was almost
 like suspending a VM in VirtualBox and then resuming it back the week after. It
 worked very well and helped me get those 30-60 minutes back.
 
-_This marks the end of the first part of this series. I will edit the post to
-include a link to the next post once that is done._
+_This marks the end of the first part of this series. In the [second
+part](/blog/20-years-of-coding-part-2), I have covered my experience entering
+the workforce as a professional programmer._
 
 /Elvis
