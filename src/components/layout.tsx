@@ -38,9 +38,6 @@ const Layout = ({ children }: LayoutProps) => {
             <Link to="/">blog</Link>
           </li>
           <li style={navLinkItem}>
-            <Link to="/tty">terminal</Link>
-          </li>
-          <li style={navLinkItem}>
             <Link to="/about">about.mdx</Link>
           </li>
           <li style={navLinkItem}>
