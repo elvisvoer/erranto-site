@@ -1,0 +1,32 @@
+.Terminal {
+  height: 90vh;
+  width: 100%;
+  overflow-y: scroll;
+}
+
+.TerminalLine {
+  line-height: 1.2em;
+  white-space: pre-wrap;
+
+  display: grid;
+  grid-template-columns: auto 1fr;
+}
+
+.TerminalInput {
+  background-color: transparent;
+  border: none;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  margin: 0;
+  outline: none;
+  width: 100%;
+}
+
+.TerminalPrompt {
+  padding-right: 5px;
+}
+
+.TerminalInput:focus {
+  outline: none;
+}
