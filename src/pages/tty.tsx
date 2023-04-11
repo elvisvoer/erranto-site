@@ -3,16 +3,12 @@ import * as React from "react";
 import { jsx } from "theme-ui";
 import { ThemeProvider } from "../components/theme";
 import Seo from "../components/seo";
-import Prompt from "../components/prompt";
 
 import { Terminal as TerminalEmulator } from "../lib/tty";
 
-import {
-  Terminal,
-  TerminalLine,
-  TerminalInput,
-  TerminalPrompt,
-} from "./tty.module.css";
+import { Terminal, TerminalLine, TerminalInput } from "./tty.module.css";
+
+const PROMPT = "ea@erranto.com ~$ ";
 
 const TtyPage = () => {
   const [input, setInput] = React.useState("");
@@ -25,18 +21,21 @@ const TtyPage = () => {
   React.useEffect(() => {
     inputElement.current?.focus();
 
-    terminalEmulator.current.on("stdout", (line: string) =>
+    terminalEmulator.current.on("data", (line: string) =>
       setOutput((output) => [...output, line])
     );
 
-    terminalEmulator.current.on("stderr", (line: string) =>
+    terminalEmulator.current.on("error", (line: string) =>
       setOutput((output) => [...output, line])
     );
   }, []);
 
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
-      terminalEmulator.current.interpret(input);
+      setOutput((output) => [...output, `${PROMPT}${input}`]);
+      if (!!input) {
+        terminalEmulator.current.interpret(input);
+      }
       setInput("");
     }
   };
@@ -51,12 +50,11 @@ const TtyPage = () => {
         <div>
           {output.map((item, index) => (
             <div key={index} className={TerminalLine}>
-              <Prompt className={TerminalPrompt} />
               {item}
             </div>
           ))}
           <div className={TerminalLine}>
-            <Prompt className={TerminalPrompt} />
+            <span>{PROMPT}</span>
             <input
               ref={inputElement}
               className={TerminalInput}

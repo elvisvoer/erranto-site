@@ -23,10 +23,6 @@
   width: 100%;
 }
 
-.TerminalPrompt {
-  padding-right: 5px;
-}
-
 .TerminalInput:focus {
   outline: none;
 }
