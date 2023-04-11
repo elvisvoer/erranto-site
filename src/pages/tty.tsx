@@ -5,6 +5,8 @@ import { ThemeProvider } from "../components/theme";
 import Seo from "../components/seo";
 import Prompt from "../components/prompt";
 
+import { Terminal as TerminalEmulator } from "../lib/tty";
+
 import {
   Terminal,
   TerminalLine,
@@ -16,14 +18,25 @@ const TtyPage = () => {
   const [input, setInput] = React.useState("");
   const [output, setOutput] = React.useState<string[]>([]);
   const inputElement = React.useRef<HTMLInputElement>(null);
+  const terminalEmulator = React.useRef<TerminalEmulator>(
+    new TerminalEmulator()
+  );
 
   React.useEffect(() => {
     inputElement.current?.focus();
+
+    terminalEmulator.current.on("stdout", (line: string) =>
+      setOutput((output) => [...output, line])
+    );
+
+    terminalEmulator.current.on("stderr", (line: string) =>
+      setOutput((output) => [...output, line])
+    );
   }, []);
 
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
-      setOutput((output) => [...output, input]);
+      terminalEmulator.current.interpret(input);
       setInput("");
     }
   };
