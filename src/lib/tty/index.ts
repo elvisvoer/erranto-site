@@ -14,7 +14,7 @@ class BuiltinTask extends EventEmitter implements ITask {
   }
 
   async execute(...args: string[]): Promise<number> {
-    return this.handler(...args);
+    return this.handler(this, ...args);
   }
 }
 
@@ -27,12 +27,12 @@ export class Terminal extends EventEmitter {
     super();
 
     const builtinCommands = {
-      help: new BuiltinTask(() => {
-        this.emit("stdout", `help command`);
+      help: new BuiltinTask((command: ITask) => {
+        command.emit("stdout", `help command`);
         return 0;
       }),
-      history: new BuiltinTask(() => {
-        this.emit("stdout", JSON.stringify(this.history));
+      history: new BuiltinTask((command: ITask) => {
+        command.emit("stdout", JSON.stringify(this.history));
         return 0;
       }),
     };
