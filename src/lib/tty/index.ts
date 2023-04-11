@@ -28,11 +28,11 @@ export class Terminal extends EventEmitter {
 
     const builtinCommands = {
       help: new BuiltinTask((command: ITask) => {
-        command.emit("stdout", `help command`);
+        command.emit("data", `help command`);
         return 0;
       }),
       history: new BuiltinTask((command: ITask) => {
-        command.emit("stdout", JSON.stringify(this.history));
+        command.emit("data", JSON.stringify(this.history));
         return 0;
       }),
     };
@@ -51,15 +51,15 @@ export class Terminal extends EventEmitter {
   private async executeCommand(cmd: string, args: string[]) {
     const command = this.findCommand(cmd);
     if (command) {
-      command.on("stdout", (...args: unknown[]) =>
-        this.emit("stdout", ...args)
+      command.on("data", (...args: unknown[]) =>
+        this.emit("data", ...args)
       );
-      command.on("stderr", (...args: unknown[]) =>
-        this.emit("stderr", ...args)
+      command.on("error", (...args: unknown[]) =>
+        this.emit("error", ...args)
       );
       return command.execute(...args);
     } else {
-      this.emit("stdout", `Command '${cmd}' not found!`);
+      this.emit("error", `Command '${cmd}' not found!`);
       return -1;
     }
   }
