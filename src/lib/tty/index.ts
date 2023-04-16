@@ -33,8 +33,13 @@ export class Terminal extends EventEmitter {
       }),
       history: new BuiltinTask((command: ITask) => {
         this.history.forEach((line, index) => {
-          command.emit('data', `${index} ${line}`);
+          command.emit("data", `${index} ${line}`);
         });
+        return 0;
+      }),
+      echo: new BuiltinTask((command: ITask, ...args: string[]) => {
+        const [cmd, ...rest] = args;
+        command.emit("data", ...rest);
         return 0;
       }),
     };
@@ -52,10 +57,18 @@ export class Terminal extends EventEmitter {
 
   private async executeCommand(cmd: string, args: string[]) {
     const command = this.findCommand(cmd);
+    const onData = (...args: unknown[]) => this.emit("data", args.join(" "));
+    const onError = (...args: unknown[]) => this.emit("error", args.join(" "));
     if (command) {
-      command.on("data", (...args: unknown[]) => this.emit("data", ...args));
-      command.on("error", (...args: unknown[]) => this.emit("error", ...args));
-      return command.execute(...args);
+      command.on("data", onData);
+      command.on("error", onError);
+
+      const res = await command.execute(...args);
+
+      command.off("data", onData);
+      command.off("error", onError);
+
+      return res;
     } else {
       this.emit("error", `Command '${cmd}' not found!`);
       return -1;
