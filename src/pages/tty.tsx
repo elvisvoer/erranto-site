@@ -21,13 +21,13 @@ const TtyPage = () => {
   React.useEffect(() => {
     inputElement.current?.focus();
 
-    terminalEmulator.current.on("data", (line: string) =>
-      setOutput((output) => [...output, line])
-    );
+    terminalEmulator.current.on("data", (line: string) => {
+      setOutput((output) => [...output, line]);
+    });
 
-    terminalEmulator.current.on("error", (line: string) =>
-      setOutput((output) => [...output, line])
-    );
+    terminalEmulator.current.on("error", (line: string) => {
+      setOutput((output) => [...output, line]);
+    });
   }, []);
 
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
