@@ -22,7 +22,7 @@
     "@theme-ui/style-guide": "^0.15.7",
     "figlet": "^1.6.0",
     "gatsby": "^5.9.0",
-    "gatsby-plugin-feed": "^5.8.0",
+    "gatsby-plugin-feed": "^5.9.0",
     "gatsby-plugin-image": "^3.8.0",
     "gatsby-plugin-manifest": "^5.9.0",
     "gatsby-plugin-sharp": "^5.8.1",
