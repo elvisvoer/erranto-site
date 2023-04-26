@@ -20,10 +20,13 @@ type D3Cell = {
   coord: Point;
 };
 
+const isBrowser = () => typeof window !== "undefined"
+
 const CELL_SIZE = 32;
 const START_OFFSET = 1;
-
-const NUM_CELLS_Y = Math.floor(Math.min(window.innerWidth, 760) / CELL_SIZE);
+const MAX_WIDTH = 760;
+const INNER_WIDTH = isBrowser() && window.innerWidth || MAX_WIDTH;
+const NUM_CELLS_Y = Math.floor(Math.min(INNER_WIDTH, MAX_WIDTH) / CELL_SIZE);
 const NUM_CELLS_X = NUM_CELLS_Y;
 
 declare const d3: any;
@@ -39,7 +42,7 @@ class GameOfLife {
 
     let lastTime = new Date().getTime();
     const timer = () => {
-      requestAnimationFrame(timer);
+      isBrowser() && window.requestAnimationFrame(timer);
       var currentTime = new Date().getTime();
 
       if (currentTime - lastTime >= this.speed) {
