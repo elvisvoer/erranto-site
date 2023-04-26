@@ -20,13 +20,14 @@ type D3Cell = {
   coord: Point;
 };
 
-const isBrowser = () => typeof window !== "undefined"
+const isBrowser = () => typeof window !== "undefined";
 
 const CELL_SIZE = 32;
 const START_OFFSET = 1;
 const MAX_WIDTH = 760;
-const INNER_WIDTH = isBrowser() && window.innerWidth || MAX_WIDTH;
-const NUM_CELLS_Y = Math.floor(Math.min(INNER_WIDTH, MAX_WIDTH) / CELL_SIZE);
+const INNER_WIDTH = (isBrowser() && window.innerWidth) || MAX_WIDTH;
+const NUM_CELLS_Y =
+  Math.floor(Math.min(INNER_WIDTH, MAX_WIDTH) / CELL_SIZE) - 1;
 const NUM_CELLS_X = NUM_CELLS_Y;
 
 declare const d3: any;
@@ -255,7 +256,7 @@ export const GameOfLifePage = () => {
           justifyContent: "space-between",
           gap: 4,
           marginTop: 2,
-          marginBottom: 4,
+          marginBottom: 2,
         }}
       >
         <IconButton onClick={handleClick}>
@@ -263,7 +264,15 @@ export const GameOfLifePage = () => {
         </IconButton>
         <Slider onChange={handleSlide} value={speed} />
       </Flex>
-      <div ref={app}></div>
+      <Flex
+        ref={app}
+        sx={{
+          alignItems: "center",
+          justifyContent: "center",
+          marginTop: 4,
+          marginBottom: 4,
+        }}
+      ></Flex>
     </Layout>
   );
 };
