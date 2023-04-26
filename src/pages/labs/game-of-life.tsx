@@ -34,25 +34,36 @@ declare const d3: any;
 
 class GameOfLife {
   private _displayData: D3Cell[][] = [];
+  private _isRunning: boolean = false;
+  private _timerId = 0;
 
-  public isRunning: boolean = false;
   public speed: number = 500;
 
   constructor() {
     this._displayData = this.getBoardDisplayData();
+  }
 
-    let lastTime = new Date().getTime();
-    const timer = () => {
-      isBrowser() && window.requestAnimationFrame(timer);
-      var currentTime = new Date().getTime();
+  set isRunning(running: boolean) {
+    this._isRunning = running;
 
-      if (currentTime - lastTime >= this.speed) {
-        this.tick();
-        lastTime = currentTime;
+    if (isBrowser()) {
+      if (this._isRunning) {
+        let lastTime = new Date().getTime();
+        const timer = () => {
+          this._timerId = window.requestAnimationFrame(timer);
+          var currentTime = new Date().getTime();
+
+          if (currentTime - lastTime >= this.speed) {
+            this.tick();
+            lastTime = currentTime;
+          }
+        };
+        // autostart
+        timer();
+      } else {
+        window.cancelAnimationFrame(this._timerId);
       }
-    };
-    // autostart
-    timer();
+    }
   }
 
   public render(rootElementSelector: string | Element | null) {
@@ -100,7 +111,7 @@ class GameOfLife {
       .style("fill", "transparent")
       .style("stroke", "#ccc")
       .on("mouseenter", ({ coord }: D3Cell) => {
-        if (this.isRunning) {
+        if (this._isRunning) {
           return;
         }
 
@@ -109,8 +120,8 @@ class GameOfLife {
       });
   }
 
-  public tick() {
-    if (!this.isRunning) {
+  private tick() {
+    if (!this._isRunning) {
       return;
     }
 
