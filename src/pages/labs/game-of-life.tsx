@@ -225,7 +225,7 @@ export const GameOfLifePage = () => {
   React.useEffect(() => {
     // timeout makes sure d3 is loaded
     setTimeout(() => {
-      game.current.speed = speed;
+      game.current.speed = speed * 10;
       game.current?.render(app.current);
     }, 1000);
   }, []);
