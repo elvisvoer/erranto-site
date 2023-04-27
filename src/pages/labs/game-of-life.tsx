@@ -110,7 +110,7 @@ class GameOfLife {
       })
       .style("fill", "transparent")
       .style("stroke", "#ccc")
-      .on("mouseenter", ({ coord }: D3Cell) => {
+      .on("pointerenter", ({ coord }: D3Cell) => {
         if (this._isRunning) {
           return;
         }
