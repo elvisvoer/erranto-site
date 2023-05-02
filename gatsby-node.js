@@ -9,7 +9,7 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
 
   const result = await graphql(`
     {
-      postsList: allMarkdownRemark(sort: { frontmatter: { created: DESC } }, limit: 2000) {
+      posts: allMarkdownRemark(sort: { frontmatter: { created: DESC } }, limit: 2000) {
         edges {
           node {
             id
@@ -23,7 +23,7 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
           }
         }
       }
-      tagsGroup: allMarkdownRemark(limit: 2000) {
+      tags: allMarkdownRemark(limit: 2000) {
         group(field: { frontmatter: { tags: SELECT } }) {
           fieldValue
         }
@@ -37,7 +37,7 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
     return;
   }
 
-  const posts = result.data.postsList.edges;
+  const posts = result.data.posts.edges;
 
   // Create post detail pages
   posts.forEach(({ node }) => {
@@ -49,7 +49,7 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
   });
 
   // Extract tag data from query
-  const tags = result.data.tagsGroup.group;
+  const tags = result.data.tags.group;
 
   // Make tag pages
   tags.forEach((tag) => {
