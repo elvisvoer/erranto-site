@@ -32,12 +32,17 @@ export const pageQuery = graphql`
   }
 `;
 
+const pluralize = (word, count) => {
+  if (count > 1) {
+    return `${word}s`;
+  }
+
+  return word;
+};
+
 const Tags = ({ pageContext, data }) => {
   const { tag } = pageContext;
   const { edges, totalCount } = data.allMarkdownRemark;
-  const tagHeader = `${totalCount} post${
-    totalCount === 1 ? "" : "s"
-  } tagged with "${tag}"`;
 
   const totalSize = data.allMarkdownRemark.edges
     .map(({ node }) => node)
@@ -53,7 +58,9 @@ const Tags = ({ pageContext, data }) => {
           view all tags
         </Link>
       </div>
-      <h2>{tagHeader}</h2>
+      <h2>
+        {totalCount} {pluralize("post", totalCount)} tagged with {tag}
+      </h2>
       <div>Total size: {totalSize} bytes</div>
       <table sx={{ width: "100%" }}>
         <tbody>
