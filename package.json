@@ -21,7 +21,7 @@
     "@theme-ui/preset-deep": "^0.15.4",
     "@theme-ui/style-guide": "^0.15.7",
     "figlet": "^1.6.0",
-    "gatsby": "^5.9.0",
+    "gatsby": "^5.9.1",
     "gatsby-plugin-feed": "^5.9.0",
     "gatsby-plugin-image": "^3.9.0",
     "gatsby-plugin-manifest": "^5.9.0",
