@@ -53,9 +53,9 @@ remember how in my first week they handed me the 700ish mb of source code, on a
 USB STICK! I guess it was faster than downloading it. Who knows!?
 
 My first task was to write a "toString" method in all the printer controller
-classes for logging purposes. "You'll basically need to serialize every object
+classes for logging purposes. _"You'll basically need to serialize every object
 and your code cannot crash the app, it would be ridiculous for the logger to
-crash it", those were basically my instructions. Yeah, no pressure, Elvis! And,
+crash it"_, those were basically my instructions. Yeah, no pressure, Elvis! And,
 oh Lord, C Plus Plus...C++... There's C, and there's C++. I don't want to start
 a war, but damn, operator overloading doesn't sit very well with beginners,
 especially not when it's all over the place and you stare at some `while` loops
@@ -63,11 +63,11 @@ especially not when it's all over the place and you stare at some `while` loops
 at the calendar", don't ask).
 
 A few weeks in, my manager (and head of the department) checks in with me during
-lunch to see how I am progressing on the code: "So, Elvis, how is it going?".
-"Oh well, I am staring at a `while` or `for` loop for half an hour before I get
-what is going on inside it". He smiled and said something like "That's quite
+lunch to see how I am progressing on the code: _"So, Elvis, how is it going?"_.
+_"Oh well, I am staring at a `while` or `for` loop for half an hour before I get
+what is going on inside it"_. He smiled and said something like _"That's quite
 normal, this is not the easiest code you come around and what's important is
-that you take the time to figure it out.". His answer really took me by
+that you take the time to figure it out."_. His answer really took me by
 surprise. I was embarrassed by my lack of understanding the code and I had way
 too big expectations of what it takes to navigate a new codebase. With just a
 few words he made me feel relieved of that self-pressure and he restored my
@@ -109,18 +109,19 @@ Just like the examples, my code also included a `main` function.
 
 I remember that I've received a great amount of feedback but one particular
 interaction was priceless: the `main` function was highlighted with a message
-reading "there is no 'main'". My brain went straight into confusion mode so I
-asked back "what do you mean there is no 'main'?". The explanation was so simple
-that I had facepalmed myself after reading it. It went something like this:
-"your code won't have the 'main' function because that sits somewhere else. You
-are already used to splitting your code in individual modules that are compiled
-separately and linked afterwards. That is exactly what will happen here, your
-code will be compiled as a shared object or static library and will be called
-when needed".
+reading _"there is no 'main'"_. My brain went straight into confusion mode so I
+asked back _"what do you mean there is no 'main'?"_. The explanation was so
+simple that I had facepalmed myself after reading it. It went something like
+this: _"your code won't have the 'main' function because that sits somewhere
+else. You are already used to splitting your code in individual modules that are
+compiled separately and linked afterwards. That is exactly what will happen
+here, your code will be compiled as a shared object or static library and will
+be called when needed"_.
 
 That explanation made a lot of sense, I was no longer in control of the entire
 system as I used to be in university projects, but rather only a small portion
-of it. However, it did raise another question "how does everything integrate?"
+of it. However, it did raise another question _"how does everything
+integrate?"_.
 
 ## Understand the bigger picture
 
