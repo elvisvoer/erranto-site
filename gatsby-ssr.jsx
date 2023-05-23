@@ -24,9 +24,9 @@ const HeadComponents = [
 
   code {
     /* not sure why code needs a fix for explicit font-size declared on html tag */
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     /* also apply color, now that we are at it */
-    color: var(--theme-ui-colors-accent);
+    color: var(--theme-ui-colors-secondary);
   }
   `}</style>,
   <script
