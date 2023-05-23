@@ -53,7 +53,7 @@ remember how in my first week they handed me the 700ish mb of source code, on a
 USB STICK! I guess it was faster than downloading it. Who knows!?
 
 My first task was to write a "toString" method in all the printer controller
-classes for the log purposes. "You'll basically need to serialize every object
+classes for logging purposes. "You'll basically need to serialize every object
 and your code cannot crash the app, it would be ridiculous for the logger to
 crash it", those were basically my instructions. Yeah, no pressure, Elvis! And,
 oh Lord, C Plus Plus...C++... There's C, and there's C++. I don't want to start
