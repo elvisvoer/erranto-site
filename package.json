@@ -15,7 +15,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.0",
+    "@emotion/react": "^11.11.1",
     "@mdx-js/react": "^2.3.0",
     "@theme-ui/mdx": "^0.15.7",
     "@theme-ui/preset-deep": "^0.15.4",
