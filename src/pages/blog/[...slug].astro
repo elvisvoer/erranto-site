@@ -1,0 +1,38 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layout/default.astro";
+
+// 1. Generate a new path for every collection entry
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  return posts.map((entry: any) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+// 2. When it's time to render, you can get the entry directly from the prop
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+
+const options: any = {
+  weekday: "long",
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+};
+---
+
+<Layout>
+  <div class="mb-10">
+    <h1 class="text-5xl font-extrabold dark:text-white text-center">
+      {entry.data.title}
+    </h1>
+    <time class="block my-2 text-lg font-light text-gray-500 text-center">
+      {new Date(entry.data.created).toLocaleDateString(undefined, options)}
+    </time>
+  </div>
+
+  <div class="format dark:format-invert lg:format-lg max-w-screen-lg">
+    <Content />
+  </div>
+</Layout>
