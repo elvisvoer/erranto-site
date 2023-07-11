@@ -1,11 +1,13 @@
 ---
 import NavBar from "../components/NavBar.astro";
+import Footer from "../components/Footer.astro";
 import BaseLayout from "./base.astro";
 ---
 
 <BaseLayout>
   <NavBar />
-  <main class="flex flex-col min-h-full px-4 py-28 mx-auto max-w-screen-lg">
+  <main class="flex flex-col px-4 pt-28 mx-auto w-full max-w-screen-lg">
     <slot />
   </main>
+  <Footer />
 </BaseLayout>
