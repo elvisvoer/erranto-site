@@ -1,5 +1,28 @@
 ---
 import ColorModeSwitcher from "./ColorModeSwitcher.astro";
+
+const navPages = [
+  {
+    name: "Home",
+    path: "/",
+  },
+  { name: "Blog", path: "/blog" },
+  { name: "About", path: "/about" },
+];
+
+const activePage = navPages.reduce((acc, cur) => {
+  if (Astro.url.pathname.startsWith(cur.path)) {
+    return cur;
+  }
+
+  return acc;
+}, navPages[0]);
+
+const activeItem =
+  "block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500";
+
+const defaultItem =
+  "block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent";
 ---
 
 <nav class="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 left-0">
@@ -42,27 +65,18 @@ import ColorModeSwitcher from "./ColorModeSwitcher.astro";
       <ul
         class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700"
       >
-        <li>
-          <a
-            href="/"
-            class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-            >Home</a
-          >
-        </li>
-        <li>
-          <a
-            href="/blog/"
-            class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-            >Blog</a
-          >
-        </li>
-        <li>
-          <a
-            href="/about/"
-            class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-            >About</a
-          >
-        </li>
+        {
+          navPages.map((page) => (
+            <li>
+              <a
+                href={page.path}
+                class={page === activePage ? activeItem : defaultItem}
+              >
+                {page.name}
+              </a>
+            </li>
+          ))
+        }
       </ul>
     </div>
   </div>
