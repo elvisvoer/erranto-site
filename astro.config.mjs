@@ -9,7 +9,7 @@ const DEV_PORT = 2121;
 
 // https://astro.build/config
 export default defineConfig({
-  site: isDev ? "https://erranto.com" : `http://localhost:${DEV_PORT}`,
+  site: isDev ? `http://localhost:${DEV_PORT}` : "https://erranto.com",
 
   server: {
     /* Dev. server only */
