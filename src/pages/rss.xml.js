@@ -7,8 +7,6 @@ const parser = new MarkdownIt();
 export async function get(context) {
   const blog = await getCollection("blog");
 
-  console.log(blog);
-
   return rss({
     title: "Erranto RSS Feed",
     description: "Erranto Blog RSS Feed",
@@ -19,6 +17,7 @@ export async function get(context) {
       link: `/blog/${post.slug}/`,
       content: sanitizeHtml(parser.render(post.body)),
       author: "Elvis Adomnica",
+      categories: post.data.tags,
     })),
   });
 }
