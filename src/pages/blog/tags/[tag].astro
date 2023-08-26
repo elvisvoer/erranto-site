@@ -53,7 +53,7 @@ const { posts } = Astro.props;
             {blogPostEntry.data.tags && (
               <p class="mb-4 text-base font-normal text-gray-500 dark:text-gray-400">
                 {blogPostEntry.data.tags.map((t: string) => (
-                  <a class="mr-4 hover:underline" href={`/blog/tags/${t}`}>
+                  <a class="mr-4 inline-block mb-2 hover:underline" href={`/blog/tags/${t}`}>
                     #{t}
                   </a>
                 ))}
