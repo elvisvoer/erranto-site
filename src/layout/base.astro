@@ -1,7 +1,7 @@
 ---
 import pkg from "../../package.json" assert { type: "json" };
 
-const { class: clazz } = Astro.props;
+const { class: clazz, pageTitle } = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -9,7 +9,7 @@ const { class: clazz } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Erranto - v{pkg.version}</title>
+    <title>{pageTitle} | Erranto</title>
 
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={pkg.description} />
