@@ -30,6 +30,15 @@ const options: any = {
     <time class="block my-2 text-lg font-light text-gray-500 text-center">
       {new Date(entry.data.created).toLocaleDateString(undefined, options)}
     </time>
+    {entry.data.tags && (
+      <p class="mb-4 text-center font-normal text-gray-500 dark:text-gray-400">
+        {entry.data.tags.map((t: string) => (
+          <a class="mr-4 inline-block mb-2 hover:underline" href={`/blog/tags/${t}`}>
+            #{t}
+          </a>
+        ))}
+      </p>
+    )}
   </div>
 
   <div class="format dark:format-invert lg:format-lg max-w-screen-lg">
