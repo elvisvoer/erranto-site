@@ -145,7 +145,7 @@ for (let i = 10; i--; ) {
 ```
 
 This is because as soon as we push the item into the queue, `this.#queue.length
-=== 1` is `true` and we invoke the `#loop` method, we pop the item from the
+=== 1` is `true` and we invoke the `#loop` method, we then pop the item from the
 queue and we proceed with the request. Processing the item immediately means
 that `this.#queue.length === 1` is `true` for every `limiter.fetch` call, thus
 creating a new `while(true)` loop each time. Each of these loops will then wait
@@ -354,7 +354,7 @@ $ deno run --allow-net example.ts
 5315 1 { input: "https://jsonplaceholder.typicode.com/todos/1" }
 ```
 
-With just a few little fixes to the original code, we reached our goal of having
+With just a few changes to the original code, we reached our goal of having
 a fully functional API-rate-limiter implementation.
 
 /Elvis
