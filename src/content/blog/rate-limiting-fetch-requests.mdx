@@ -14,7 +14,7 @@ tags:
 A few weeks ago, my colleagues at SprintEins shared [an
 article](https://dev.to/sevapp/gentle-promise-based-http-client-for-deno-and-nodejs-part-2-1ian)
 describing a solution for rate limiting fetch requests in the Deno to avoid
-reaching an API rate limit. I used to write similar code in the past so the
+reaching an API rate limit. I used to write similar code in the past, so the
 article caught my attention.
 
 ## Original implementation
@@ -23,7 +23,7 @@ The [original
 implementation](https://github.com/sevapp/fetchify/blob/0.0.1/src/HTTPLimiter.ts)
 described in the [first
 part](https://dev.to/sevapp/apis-fetch-and-deno-or-how-i-make-rate-limiter-1ch0)
-of the series proposes an initial "not production ready" solution:
+of the artile series proposes an initial "not production ready" solution:
 
 ```typescript
 import { delay } from "https://deno.land/std@0.202.0/async/delay.ts";
@@ -89,8 +89,8 @@ fetch(input: FetchInput, init?: RequestInit): Promise<Response> {
 }
 ```
 
-After a quick glance at the entire code one can notice that the `promise` field
-of the `IRequestEntity` is never used so `fetch` could be simplified to:
+After a quick glance at the entire code, one can notice that the `promise` field
+of the `IRequestEntity` is never used, so `fetch` could be simplified to:
 
 ```typescript
 fetch(input: FetchInput, init?: RequestInit): Promise<Response> {
@@ -144,23 +144,23 @@ for (let i = 10; i--; ) {
 }
 ```
 
-This is because as soon as we push the item into the queue, `this.#queue.length
-=== 1` is `true` and we invoke the `#loop` method, we then pop the item from the
+This is because, as soon as we push the item into the queue, `this.#queue.length
+=== 1` is `true`, and we invoke the `#loop` method. We then pop the item from the
 queue and we proceed with the request. Processing the item immediately means
 that `this.#queue.length === 1` is `true` for every `limiter.fetch` call, thus
 creating a new `while(true)` loop each time. Each of these loops will then wait
 for the delay and will be interrupted in the next cycle due to the `if (!entity)
 break;` statement. Moving back the `delay` function at the beginning of the
 `while` loop will block it for at least 1 second before it continues with
-processing the items. This behavior is closer to what we need, if you remove the
-`await` in front of the `limiter.fetch` call you will notice that all requests
+processing the items. This behavior is closer to what we need. If we remove the
+`await` in front of the `limiter.fetch` call, we will notice that all requests
 get queued and then processed one-by-one with 1 second delay between them.
 
 ## Extended version
 
 [The second
 part](https://dev.to/sevapp/gentle-promise-based-http-client-for-deno-and-nodejs-part-2-1ian)
-of the series goes in a direction I don't quite agree with. Instead, I will
+of the series goes in a direction I don't quite agree with. Instead, I would
 rename the `interval` option to `intervalMilliseconds`, add a new option called
 `requestsPerInterval`, and update the logic correspondingly. Here is the entire
 `HTTPLimiter.ts`:
@@ -251,10 +251,10 @@ for (let i = 10; i; i--) {
 }
 ```
 
-If you are executing the code above you will notice that only two requests are
+If we are executing the code above, we will notice that only two requests are
 being fired every second, until all 10 requests are done. We still have a
 problem though. As pointed out in the series, our `fetch` requests are being
-executed sequentially. To better visualize this use the following example code:
+executed sequentially. To better visualize this, we can use the following example code:
 
 ```typescript
 import { HTTPLimiter } from "./src/HTTPLimiter.ts";
@@ -283,8 +283,7 @@ for (let i = 10; i; i--) {
 }
 ```
 
-and, let's also mock global `fetch` for now to use longer requests times.
-Add this function above the `HTTPLimiter` class:
+and, we can also mock the global `fetch` to control the time it takes to resolve a request:
 
 ```typescript
 const fetch = (input, _) =>
@@ -299,9 +298,8 @@ const fetch = (input, _) =>
   );
 ```
 
-It returns a `Promise` that looks like a `Response` (has a `json` method which
-returns a `Promise`) which resolves after 300ms. Running the code should output
-something similar to:
+The code returns a `Promise` that looks like a `Response` (has a `json` method which
+returns a `Promise`) and resolves after 300ms. Running it should output something similar to:
 
 ```bash
 $ deno run --allow-net example.ts
@@ -318,8 +316,8 @@ $ deno run --allow-net example.ts
 
 ```
 
-That's around 8ish seconds instead of around 5. Not good. Let's now fix this
-by making our loop parallel. The following code should show better results:
+That's around 8 seconds instead of around 5. Not good. Let's now fix this
+by making our loop run the requests in parallel:
 
 ```typescript
 async #loop() {
@@ -337,8 +335,7 @@ async #loop() {
 }
 ```
 
-Indeed, this solution yields better results. Our requests are now executed in
-parallel after the loop awaits for the delay.
+Indeed, this solution yields better results, as you can see in the results below.
 
 ```bash
 $ deno run --allow-net example.ts
@@ -354,7 +351,7 @@ $ deno run --allow-net example.ts
 5315 1 { input: "https://jsonplaceholder.typicode.com/todos/1" }
 ```
 
-With just a few changes to the original code, we reached our goal of having
+With just a few changes to the original code, we have reached our goal of having
 a fully functional API-rate-limiter implementation.
 
 /Elvis
