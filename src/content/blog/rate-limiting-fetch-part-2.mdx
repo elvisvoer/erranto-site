@@ -1,0 +1,91 @@
+---
+title: "Simple fetch limiter (Part 2)"
+slug: "rata-limiting-fetch-part-2"
+created: "2023-11-01"
+tags:
+  - async
+  - fetch
+  - rate-limit
+  - request
+  - fetch-loop
+  - delay
+  - setTimeout
+  - event-loop
+---
+
+<img
+  style="margin: 0 auto; max-width: 320px;"
+  src="https://media.tenor.com/2kAO6lk_cbIAAAAd/pointing-leonardo-di-caprio.gif"
+  alt="Leonardo Dicaprio Reaction GIF"
+/>
+
+It is very possible that you had such a reaction while reading my
+[previous post](/blog/fetch-rate-limit), especially at the part where I
+mentioned that moving the `delay` to the bottom of the loop was a mistake.
+The move at the bottom was an attempt to address an issue that becomes obvious
+when using large values for the loop interval, e.g., 30 seconds.
+
+```typescript
+const limiter = new HTTPLimiter({
+  intervalMilliseconds: 30_000,
+  requestsPerInterval: 2,
+});
+
+console.log("start");
+for (let i = 10; i; i--) {
+  limiter
+    .fetch(`https://jsonplaceholder.typicode.com/todos/${i}`)
+    .then((response) => response.json())
+    .then((json) => console.log(json));
+}
+```
+
+We'll see `start` being printed in the console, and only after the
+30 seconds delay (sleep), we will see the requests being fired, and
+the responses being printed as well. Let's move it back to the bottom of
+the loop.
+
+```typescript
+async #loop() {
+  while (true) {
+    const entities = this.#queue.splice(0, this.#options.requestsPerInterval);
+    if (!entities.length) break;
+
+    for (const entity of entities) {
+      fetch(entity.input, entity.init)
+        .then(entity.resolve)
+        .catch(entity.reject);
+    }
+
+    await delay(this.#options.intervalMilliseconds);
+  }
+}
+```
+
+We are now back at the issue that all the items are being consumed immediately.
+Go back to the previous article for an explanation why that happens. In any case,
+the fix is easy. All we have to do is to allow "the producer" (the main thread) to
+produce all the requests it needs. For instance, allow our `todos` fetch loop to
+finish iterating over all the requests. We can easily achieve this by deferring
+the start of processing the items to the next event loop cycle using `setTimeout`.
+
+```typescript
+fetch(input: FetchInput, init?: RequestInit): Promise<Response> {
+  const promise = new Promise<Response>((resolve, reject) => {
+    this.#queue.push({
+      input,
+      init,
+      resolve,
+      reject,
+    });
+  });
+
+  if (this.#queue.length === 1) setTimeout(() => this.#loop(), 0);
+
+  return promise;
+}
+```
+
+Now everything works as expected, and the code remained simple.
+
+/Elvis
