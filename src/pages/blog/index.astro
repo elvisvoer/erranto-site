@@ -16,26 +16,34 @@ const blogEntries = await getCollection("blog");
             new Date(b.data.created).getTime() -
             new Date(a.data.created).getTime()
         )
-        .map((blogPostEntry) => (
+        .map(({ slug, data: { created, tags, title } }) => (
           <li class="mb-10 ml-4">
-            <div class="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-900 dark:bg-gray-700" />
-            <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
-              {new Date(blogPostEntry.data.created).toDateString()}
-            </time>
-            <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">
-              <a href={`/blog/${blogPostEntry.slug}`}>
-                {blogPostEntry.data.title}
-              </a>
-            </h3>
-            {blogPostEntry.data.tags && (
-              <p class="mb-4 text-base font-normal text-gray-500 dark:text-gray-400">
-                {blogPostEntry.data.tags.map((t: string) => (
-                  <a class="mr-4 inline-block mb-2 hover:underline" href={`/blog/tags/${t}`}>
-                    #{t}
-                  </a>
-                ))}
-              </p>
-            )}
+            <article>
+              <header>
+                <div class="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-900 dark:bg-gray-700" />
+                <time
+                  datetime={new Date(created).toISOString()}
+                  class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500"
+                >
+                  {new Date(created).toDateString()}
+                </time>
+                <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">
+                  <a href={`/blog/${slug}`}>{title}</a>
+                </h3>
+                {tags && (
+                  <p class="mb-4 text-base font-normal text-gray-500 dark:text-gray-400">
+                    {tags.map((t: string) => (
+                      <a
+                        class="mr-4 inline-block mb-2 hover:underline"
+                        href={`/blog/tags/${t}`}
+                      >
+                        #{t}
+                      </a>
+                    ))}
+                  </p>
+                )}
+              </header>
+            </article>
           </li>
         ))
     }

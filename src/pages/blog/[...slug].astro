@@ -13,6 +13,7 @@ export async function getStaticPaths() {
 // 2. When it's time to render, you can get the entry directly from the prop
 const { entry } = Astro.props;
 const { Content } = await entry.render();
+const { created, tags, title } = entry.data;
 
 const options: any = {
   weekday: "long",
@@ -22,26 +23,36 @@ const options: any = {
 };
 ---
 
-<Layout pageTitle={entry.data.title}>
-  <div class="mb-10">
-    <h1 class="text-5xl font-extrabold dark:text-white text-center">
-      {entry.data.title}
-    </h1>
-    <time class="block my-2 text-lg font-light text-gray-500 text-center">
-      {new Date(entry.data.created).toLocaleDateString(undefined, options)}
-    </time>
-    {entry.data.tags && (
-      <p class="mb-4 text-center font-normal text-gray-500 dark:text-gray-400">
-        {entry.data.tags.map((t: string) => (
-          <a class="mr-4 inline-block mb-2 hover:underline" href={`/blog/tags/${t}`}>
-            #{t}
-          </a>
-        ))}
-      </p>
-    )}
-  </div>
+<Layout pageTitle={title}>
+  <article>
+    <header class="mb-10">
+      <h1 class="text-5xl font-extrabold dark:text-white text-center">
+        {title}
+      </h1>
+      <time
+        datetime={new Date(created).toISOString()}
+        class="block my-2 text-lg font-light text-gray-500 text-center"
+      >
+        {new Date(created).toLocaleDateString(undefined, options)}
+      </time>
+      {
+        tags && (
+          <p class="mb-4 text-center font-normal text-gray-500 dark:text-gray-400">
+            {tags.map((t: string) => (
+              <a
+                class="mr-4 inline-block mb-2 hover:underline"
+                href={`/blog/tags/${t}`}
+              >
+                #{t}
+              </a>
+            ))}
+          </p>
+        )
+      }
+    </header>
 
-  <div class="format dark:format-invert lg:format-lg max-w-screen-lg">
-    <Content />
-  </div>
+    <div class="format dark:format-invert lg:format-lg max-w-screen-lg">
+      <Content />
+    </div>
+  </article>
 </Layout>
