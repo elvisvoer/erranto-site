@@ -1,7 +1,7 @@
 import rss from "@astrojs/rss";
 import { getCollection } from "astro:content";
-import sanitizeHtml from "sanitize-html";
 import MarkdownIt from "markdown-it";
+import sanitizeHtml from "sanitize-html";
 const parser = new MarkdownIt();
 
 export async function get(context) {
@@ -14,7 +14,7 @@ export async function get(context) {
     items: blog.map((post) => ({
       title: post.data.title,
       pubDate: post.data.created,
-      link: `/blog/${post.slug}/`,
+      link: `/blog/${post.slug}`,
       content: sanitizeHtml(parser.render(post.body)),
       author: "Elvis Adomnica",
       categories: post.data.tags,
