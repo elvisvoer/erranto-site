@@ -2,8 +2,8 @@
   "name": "erranto",
   "version": "2.1.0",
   "private": true,
-  "description": "erranto",
-  "author": "Elvis Eduard Adomnica",
+  "description": "I remember I once removed a 5 years old TODO in a codebase.",
+  "author": "Elvis Adomnica",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
