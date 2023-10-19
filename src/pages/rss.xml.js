@@ -9,6 +9,7 @@ export async function get(context) {
   const blog = await getCollection("blog");
 
   return rss({
+    trailingSlash: false,
     title: "Erranto RSS Feed",
     description: pkg.description,
     site: context.site,
