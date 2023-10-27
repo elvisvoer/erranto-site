@@ -1,6 +1,12 @@
 ---
 import pkg from "../../package.json" assert { type: "json" };
 
+const stripTrailingSlash = (str: string) => {
+    return str.endsWith('/') ?
+        str.slice(0, -1) :
+        str;
+};
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const { class: clazz, pageTitle } = Astro.props;
 ---
 
@@ -14,6 +20,7 @@ const { class: clazz, pageTitle } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={pkg.description} />
     <meta name="author" content={pkg.author} />
+    <link rel="canonical" href={stripTrailingSlash(canonicalURL.href)} />
     <link rel="icon" type="image/png" href="/icon.png" />
 
     <link
