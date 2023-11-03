@@ -1,0 +1,52 @@
+---
+const { lines, covarage } = Astro.props;
+const lineNumbers = Array.from([...Array(lines).keys()]);
+---
+
+<style is:global>
+  .code-wrapper {
+    max-width: 100%;
+    display: grid;
+    grid-template-columns: 2rem 2rem minmax(0px, 1fr);
+  }
+
+  .code-wrapper pre {
+    margin: 0;
+    padding: 1rem 0.2rem;
+    border-radius: 0;
+  }
+
+  .code-wrapper .line-num pre {
+    background-color: inherit;
+    text-align: right;
+  }
+
+  .code-wrapper .code-cov pre {
+    text-align: center;
+  }
+
+  .code-wrapper .code {
+    background-color: #24292e;
+  }
+
+  .code-wrapper .code > pre {
+    padding: 1rem 1.5rem;
+  }
+</style>
+
+<div class="code-wrapper">
+  <div class="line-num">
+    <pre>{lineNumbers.map(num => `${num + 1}\n`)}</pre>
+  </div>
+  <div class="code-cov">
+    {
+      covarage && (
+        <pre>{covarage.map((cov: any) => {
+            const text = cov ? `${cov}x` : " ";
+            return `${text}\n`;
+          })}</pre>
+      )
+    }
+  </div>
+  <div class="code"><slot /></div>
+</div>
