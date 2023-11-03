@@ -1,5 +1,5 @@
 ---
-const { lines, covarage } = Astro.props;
+const { lines, coverage } = Astro.props;
 const lineNumbers = Array.from([...Array(lines).keys()]);
 ---
 
@@ -40,8 +40,8 @@ const lineNumbers = Array.from([...Array(lines).keys()]);
   </div>
   <div class="code-cov">
     {
-      covarage && (
-        <pre>{covarage.map((cov: any) => {
+      coverage && (
+        <pre>{coverage.map((cov: any) => {
             const text = cov ? `${cov}x` : " ";
             return `${text}\n`;
           })}</pre>
