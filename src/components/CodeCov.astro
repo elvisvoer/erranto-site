@@ -39,14 +39,10 @@ const lineNumbers = Array.from([...Array(coverage.length).keys()]);
     <pre>{lineNumbers.map(num => `${num + 1}\n`)}</pre>
   </div>
   <div class="code-cov">
-    {
-      coverage && (
-        <pre>{coverage.map((cov: any) => {
-            const text = cov ? `${cov}x` : " ";
-            return `${text}\n`;
-          })}</pre>
-      )
-    }
+    <pre>{coverage.map((cov: any) => {
+        const text = cov ? `${cov}x` : " ";
+        return `${text}\n`;
+      })}</pre>
   </div>
   <div class="code"><slot /></div>
 </div>
