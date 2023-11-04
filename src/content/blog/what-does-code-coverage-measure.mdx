@@ -7,9 +7,9 @@ tags:
 ---
 
 import CodeCov from "../../components/CodeCov.astro";
-export const coverage = [0, 5, 0, 1, 0, 1, 0, 1, 0, 0, 2, 0, 0, 0, 1];
+export const coverage = [0, 5, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1];
 
-<CodeCov lines={15} coverage={coverage}>
+<CodeCov coverage={coverage}>
 ```javascript
 function fun(...args) {
   switch (args.length) {
@@ -19,6 +19,8 @@ function fun(...args) {
       throw new Error("Neh, 2 would do");
     case 2:
       return 2;
+    case 3:
+      return undeclared.something;
  
     default:
       return -1;

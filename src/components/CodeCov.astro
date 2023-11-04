@@ -1,6 +1,6 @@
 ---
-const { lines, coverage } = Astro.props;
-const lineNumbers = Array.from([...Array(lines).keys()]);
+const { coverage } = Astro.props;
+const lineNumbers = Array.from([...Array(coverage.length).keys()]);
 ---
 
 <style is:global>
