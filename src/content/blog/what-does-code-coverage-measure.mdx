@@ -194,3 +194,20 @@ module.exports = foo;
 </CodeCov>
 ````
 
+### Is code coverage useless then?
+
+No, it is not. Code coverage is a great tool to help you understand how well you
+are doing on testing. But, like with any type of measurements, you should take
+its results with a grain of salt. For instance, [snapshot
+testing](https://jestjs.io/docs/snapshot-testing) could lead to false positives
+in terms of line of code covered but not properly verified. Also, imposing a
+ridiculous threshold (like 98% coverage) will cause more damage that it will
+help. Developers will have to start exposing aspects of the code that were
+supposed to be encapsulated, just for the sake of reaching the necessary mark
+needed for the pipeline to pass.
+
+_I've never been interested in how code coverage works until my former colleague
+Iryna gave us an amazing presentation about it during my time at
+[Corti](https://www.corti.ai/). Thank you for that!_
+
+/Elvis
