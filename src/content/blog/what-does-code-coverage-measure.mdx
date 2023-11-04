@@ -1,7 +1,7 @@
 ---
 title: What does code coverage measure?
 slug: "what-does-code-coverage-measure"
-created: "2023-11-03"
+created: "2023-11-03T18:44:22.000Z"
 tags:
   - javascript
   - code-coverage
@@ -9,11 +9,32 @@ tags:
 ---
 
 import CodeCov from "../../components/CodeCov.astro";
-export const coverage = [0, 5, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1];
+export const coverage = [0, 0, 5, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1];
 
-<CodeCov coverage={coverage}>
+This week, I was having a conversation with another engineer, and they had an
+interesting remark. They claimed that devops should have some control over a
+project pipeline workflow in case we impose a code coverage threshold.
+Otherwise, "an engineer would be able to just lower it to pass the pipeline".
+There are a few issues with this claim:
+
+1. The change to lower the coverage threshold would show in the review, so it is
+   not very easy to sneak it in.
+2. An engineer can do much more damage than cheating the code coverage threshold
+   in an environment governed by mistrust.
+3. If the entire dev team is "evil", even if they don't have control over the
+   config for the threshold, they can still easily cheat the code coverage instead.
+
+### What does code coverage measure?
+
+Code coverage measures **lines of code executed**, **not lines of code
+validated**, as we might mistakenly expect. To cheat, one can write some unit
+tests that are providing just the right input (in order to cover as many lines of
+code as possible) without any consideration for the results of the code
+execution. Take the following silly function as an example.
+
 ```javascript
-function fun(...args) {
+// foo.js
+function foo(...args) {
   switch (args.length) {
     case 0:
       throw new Error("Expected at least 1 param");
@@ -22,13 +43,154 @@ function fun(...args) {
     case 2:
       return 2;
     case 3:
-      return undeclared.something;
- 
+      return undef.something;
+
     default:
       return -1;
   }
 }
- 
-module.exports = fun;
+
+module.exports = foo;
+```
+
+We can easily cover each branch of the `switch` statement by calling `foo` with
+`0`, `1`, `2`, `3`, and `4` arguments. We can do this in a simple `for` loop.
+
+```javascript
+for (let i = 0; i < 5; i++) {
+  const args = Array.from(Array(i).keys()); // [0..i]
+  foo(...args);
+}
+```
+
+Here is how the entire test file looks like. We guarded our function calls in a
+`try/catch`, and we are only doing a dummy assertion at the end.
+
+```javascript
+// foo.test.js
+const foo = require("./foo");
+
+test("test foo", () => {
+  // call test function ignoring its execution
+  for (let i = 0; i < 5; i++) {
+    try {
+      const args = Array.from(Array(i).keys()); // [0..i]
+      foo(...args);
+    } catch {}
+  }
+
+  expect(true).toBeTruthy();
+});
+```
+
+To make everyone's life easier, I put all the code together on my [GitHub
+page](https://github.com/elvisvoer/code-cove-example). After installing the
+dependencies and running `npm run test -- --coverage`, we will get a report
+similar to the one below. We have indeed covered all the branches of the
+`switch` statement, while all we asserted is if `true` is a value that is
+coerced to `true` when a `boolean` is expected.
+
+<CodeCov coverage={coverage}>
+```javascript
+// foo.js
+function foo(...args) {
+  switch (args.length) {
+    case 0:
+      throw new Error("Expected at least 1 param");
+    case 1:
+      throw new Error("Neh, 2 would do");
+    case 2:
+      return 2;
+    case 3:
+      return undef.something;
+
+    default:
+      return -1;
+  }
+}
+
+module.exports = foo;
 ```
 </CodeCov>
+
+Nice cheat! We didn't even care that `undef.something` will throw an
+`Uncaught ReferenceError: undef is not defined` exception, all the errors
+were caught and the test passed.
+
+### How does code coverage work?
+
+When we pass `--coverage` to the test runner ([jest](https://jestjs.io/) in my
+case), our code is first preprocessed to include some extra code which will do
+the coverage line counting. Here is how a very simplified version of that would
+look like.
+
+```javascript
+const cov = Array(18).fill(0);// foo.js
+function foo(...args) {
+cov[2]++;switch (args.length) {
+    case 0:
+cov[4]++;throw new Error("Expected at least 1 param");
+    case 1:
+cov[6]++;throw new Error("Neh, 2 would do");
+    case 2:
+cov[8]++;return 2;
+    case 3:
+cov[10]++;return undef.something;
+
+    default:
+cov[13]++;return -1;
+  }
+}
+
+cov[17]++;module.exports = foo;
+module.exports.__cov__ = cov;
+```
+
+We can now simulate our test coverage with the same loop we used earlier.
+
+```javascript
+const foo = require("./foo-cov");
+
+for (let i = 0; i < 5; i++) {
+  try {
+    const args = Array.from(Array(i).keys()); // [0..i]
+    foo(...args);
+  } catch {}
+}
+
+console.log(JSON.stringify(foo.__cov__));
+```
+
+Et voilà, it printed the same array that I've used to configure the [code
+coverage
+component](https://github.com/elvisvoer/erranto-site/blob/main/src/components/CodeCov.astro)
+used earlier in the article.
+
+````jsx
+import CodeCov from "../../components/CodeCov.astro";
+export const coverage = [0, 0, 5, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1];
+
+<CodeCov coverage={coverage}>
+```javascript
+// foo.js
+function foo(...args) {
+  switch (args.length) {
+    case 0:
+      throw new Error("Expected at least 1 param");
+    case 1:
+      throw new Error("Neh, 2 would do");
+    case 2:
+      return 2;
+    case 3:
+      return undef.something;
+
+    default:
+      return -1;
+  }
+}
+
+module.exports = foo;
+```
+</CodeCov>
+````
+
