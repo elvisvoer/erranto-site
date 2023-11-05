@@ -1,7 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "../../layout/default.astro";
-const blogEntries = await getCollection("blog");
+const blogEntries = (await getCollection("blog")).filter(post => !post.data.archived);
 ---
 
 <Layout pageTitle="Blog">

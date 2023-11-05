@@ -6,7 +6,7 @@ import pkg from "../../package.json" assert { type: "json" };
 const parser = new MarkdownIt();
 
 export async function get(context) {
-  const blog = await getCollection("blog");
+  const blog = (await getCollection("blog")).filter(post => !post.data.archived);
 
   return rss({
     trailingSlash: false,
