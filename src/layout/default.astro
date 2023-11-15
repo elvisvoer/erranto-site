@@ -3,10 +3,10 @@ import NavBar from "../components/NavBar.astro";
 import Footer from "../components/Footer.astro";
 import BaseLayout from "./base.astro";
 
-const { pageTitle } = Astro.props;
+const { pageTitle, keywords } = Astro.props;
 ---
 
-<BaseLayout pageTitle={pageTitle}>
+<BaseLayout pageTitle={pageTitle} keywords={keywords}>
   <NavBar />
   <main class="flex flex-col px-4 pt-28 mx-auto w-full max-w-screen-lg">
     <slot />

@@ -2,12 +2,10 @@
 import pkg from "../../package.json" assert { type: "json" };
 
 const stripTrailingSlash = (str: string) => {
-    return str.endsWith('/') ?
-        str.slice(0, -1) :
-        str;
+  return str.endsWith("/") ? str.slice(0, -1) : str;
 };
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-const { class: clazz, pageTitle } = Astro.props;
+const { class: clazz, pageTitle, keywords } = Astro.props;
 ---
 
 <!doctype html>
@@ -20,6 +18,7 @@ const { class: clazz, pageTitle } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={pkg.description} />
     <meta name="author" content={pkg.author} />
+    {keywords && <meta name="keywords" content={keywords.join(", ")} />}
     <link rel="canonical" href={stripTrailingSlash(canonicalURL.href)} />
     <link rel="icon" type="image/png" href="/icon.png" />
 
@@ -38,15 +37,15 @@ const { class: clazz, pageTitle } = Astro.props;
       data-domains="erranto.com,erranto-site.vercel.app"></script>
 
     <script is:inline>
-    if (
-      localStorage.getItem("color-theme") === "dark" ||
-      (!("color-theme" in localStorage) &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches)
-    ) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
+      if (
+        localStorage.getItem("color-theme") === "dark" ||
+        (!("color-theme" in localStorage) &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
     </script>
 
     <style is:global>
