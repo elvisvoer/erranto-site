@@ -5,7 +5,7 @@ import sanitizeHtml from "sanitize-html";
 import pkg from "../../package.json" assert { type: "json" };
 const parser = new MarkdownIt();
 
-export async function get(context) {
+export async function GET(context) {
   const blog = (await getCollection("blog"))
     .filter((post) => !post.data.archived)
     .sort((a, b) => new Date(b.data.created) - new Date(a.data.created));
