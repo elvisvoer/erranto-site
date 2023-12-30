@@ -16,7 +16,7 @@
     "@astrojs/mdx": "^2.0.3",
     "@astrojs/rss": "^4.0.1",
     "@astrojs/svelte": "^5.0.2",
-    "@astrojs/tailwind": "^5.0.4",
+    "@astrojs/tailwind": "^5.1.0",
     "@popperjs/core": "^2.11.8",
     "astro": "^4.0.8",
     "flowbite": "^2.2.1",
