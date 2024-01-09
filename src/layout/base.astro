@@ -21,6 +21,7 @@ const { class: clazz, pageTitle, keywords } = Astro.props;
     {keywords && <meta name="keywords" content={keywords.join(", ")} />}
     <link rel="canonical" href={stripTrailingSlash(canonicalURL.href)} />
     <link rel="icon" type="image/png" href="/icon.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
 
     <link
       rel="preload"
