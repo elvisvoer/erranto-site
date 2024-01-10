@@ -33,13 +33,13 @@ const options: any = {
       </h1>
       <time
         datetime={new Date(created).toISOString()}
-        class="block my-2 text-lg font-light text-gray-500 text-center"
+        class="block my-2 text-center text-lg text-gray-700 dark:text-gray-400"
       >
         {new Date(created).toLocaleDateString(undefined, options)}
       </time>
       {
         tags && (
-          <p class="mb-4 text-center font-normal text-gray-500 dark:text-gray-400">
+          <p class="mb-4 text-center font-normal text-gray-700 dark:text-gray-400">
             {tags.map((t: string) => (
               <a
                 class="mr-4 inline-block mb-2 hover:underline"
@@ -54,7 +54,7 @@ const options: any = {
     </header>
 
     <div
-      class="format dark:format-invert dark:format-code:bg-gray-700 lg:format-lg max-w-screen-lg"
+      class="format dark:format-invert text-gray-900 dark:text-gray-200 dark:format-code:bg-gray-700 lg:format-lg max-w-screen-lg"
     >
       <Content />
       <script

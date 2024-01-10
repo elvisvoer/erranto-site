@@ -23,7 +23,7 @@ const blogEntries = (await getCollection("blog")).filter(post => !post.data.arch
                 <div class="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-900 dark:bg-gray-700" />
                 <time
                   datetime={new Date(created).toISOString()}
-                  class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500"
+                  class="mb-1 text-sm font-normal leading-none text-gray-700 dark:text-gray-400"
                 >
                   {new Date(created).toDateString()}
                 </time>
@@ -31,7 +31,7 @@ const blogEntries = (await getCollection("blog")).filter(post => !post.data.arch
                   <a href={`/blog/${slug}`}>{title}</a>
                 </h3>
                 {tags && (
-                  <p class="mb-4 text-base font-normal text-gray-500 dark:text-gray-400">
+                  <p class="mb-4 text-base font-normal text-gray-700 dark:text-gray-400">
                     {tags.map((t: string) => (
                       <a
                         class="mr-4 inline-block mb-2 hover:underline"
