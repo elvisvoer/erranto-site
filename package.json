@@ -2,7 +2,7 @@
   "name": "erranto",
   "version": "2.3.0",
   "private": true,
-  "description": "I remember I once removed a 5 years old TODO in a codebase.",
+  "description": "Elvis Adomnica writes about programming, software engineering, and web development.",
   "author": "Elvis Adomnica",
   "scripts": {
     "dev": "astro dev",
