@@ -15,7 +15,7 @@ export async function getStaticPaths() {
 // 2. When it's time to render, you can get the entry directly from the prop
 const { entry } = Astro.props;
 const { Content } = await entry.render();
-const { created, tags, title } = entry.data;
+const { created, tags, title, description } = entry.data;
 
 const options: any = {
   weekday: "long",
@@ -25,7 +25,7 @@ const options: any = {
 };
 ---
 
-<Layout pageTitle={title} keywords={tags}>
+<Layout pageTitle={title} description={description}>
   <article>
     <header class="mb-10">
       <h1 class="text-5xl font-extrabold dark:text-white text-center">

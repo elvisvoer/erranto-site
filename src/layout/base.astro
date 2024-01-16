@@ -5,7 +5,8 @@ const stripTrailingSlash = (str: string) => {
   return str.endsWith("/") ? str.slice(0, -1) : str;
 };
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-const { class: clazz, pageTitle, keywords } = Astro.props;
+const { class: clazz, pageTitle } = Astro.props;
+const description = Astro.props.description || pkg.description
 ---
 
 <!doctype html>
@@ -16,9 +17,8 @@ const { class: clazz, pageTitle, keywords } = Astro.props;
     <title>{pageTitle} | Erranto</title>
 
     <meta name="generator" content={Astro.generator} />
-    <meta name="description" content={pkg.description} />
+    <meta name="description" content={description} />
     <meta name="author" content={pkg.author} />
-    {keywords && <meta name="keywords" content={keywords.join(", ")} />}
     <link rel="canonical" href={stripTrailingSlash(canonicalURL.href)} />
     <link rel="icon" type="image/png" href="/icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
