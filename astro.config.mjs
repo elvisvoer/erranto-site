@@ -13,4 +13,5 @@ export default defineConfig({
     port: DEV_PORT,
   },
   integrations: [mdx(), tailwind(), svelte(), sitemap()],
+  trailingSlash: "never",
 });
