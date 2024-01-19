@@ -1,0 +1,356 @@
+---
+title: "A TDD implementation of NodeJS Path module"
+description: "A test-driven development implementation of the NodeJS Path module"
+slug: "tdd-implementation-of-nodejs-path-module"
+created: "2024-01-20T21:32:00.000Z"
+tags:
+  - test-driven-development
+  - path
+  - nodejs
+---
+
+import CodeBlock from "../../components/CodeBlock.astro";
+
+export function print(x) { return x === 1 ? "+" : "-"; }
+export const firstChange = [0, 0, 1, 1, 0,  0, 0];
+export const isAbsoluteEmpty = [0, 0, 1, 1, 0, 0, 0, 0, 0];
+export const isAbsoluteTests = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1,
+1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0];
+export const isAbsoluteImpl = [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0];
+export const assertStringTests = [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1,
+1, 1, 1, 1, 1, 1, 1, 1, 0, 0];
+export const assertStringImpl = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0];
+
+**How many TDD practitioners does it take to change a light bulb?** _They don't
+change the bulb; they refactor the darkness!_
+
+## Introduction
+
+I have asked ChatGPT to tell me some jokes about test-driven development (TDD)
+and out of 12 generated answers none included unicorns. That's a bit of a
+disappointment considering how similar they are. Everyone is a big advocate of
+TDD and how great it is but I am yet to find a team that practices it
+consistently.
+
+Ironically, I've chosen to join the advocates group by documenting a
+step-by-step [TDD implementation of the NodeJS Path
+module](https://github.com/elvisvoer/b-path). But before we dive in, you might
+be wondering, _**'What is test-driven development?'**_ I have asked ChatGPT to
+answer this question for you, and here is the result:
+
+```markdown
+Test-Driven Development (TDD) is a software development approach in which tests
+are written before the actual code implementation. The TDD process typically
+follows these steps:
+
+1. **Write a Test**: Before writing any code, a developer creates a test that
+defines a specific function or improvement of the software.
+
+2. **Run the Test**: The newly created test is executed, and it should fail
+because the corresponding code to fulfill the requirements hasn't been
+implemented yet.
+
+3. **Write Code**: The developer writes the minimum amount of code necessary to
+pass the test. The primary goal is to make the test pass, not to create a
+fully-featured solution.
+
+4. **Run Tests**: After writing the code, all tests, including the new one, are
+executed to ensure that the recent changes haven't broken any existing
+functionality.
+
+5. **Refactor Code**: If necessary, the code is refactored to improve its
+structure, readability, or efficiency. At each step, the tests are rerun to make
+sure that the changes haven't introduced errors.
+
+6. **Repeat**: Steps 1-5 are repeated iteratively for each new piece of
+functionality.
+
+TDD is designed to promote a more robust and maintainable codebase by ensuring
+that every piece of code has corresponding tests and that new features or
+changes do not negatively impact existing functionality.
+```
+
+Pretty straight forward, right? TDD not only fosters a more robust and
+maintainable codebase but also mitigates the impact of "implementation bias"
+(status quo bias). This cognitive bias occurs when a programmer is influenced by
+existing code while crafting a new unit of code.
+
+Consider this scenario: I've created a function tasked with parsing and
+processing an array of strings (we will actually write that later on in the
+`path.resolve` implementation). If I initially write the code without accounting
+for certain corner cases, chances are high that I'll overlook those same
+scenarios when crafting the corresponding tests. Also, another programmer aiming
+to enhance code coverage may be willing to write unit tests for my
+implementation. Their focus could be on ensuring each statement is executed at
+least once, potentially achieving [full unit
+coverage](/blog/what-does-code-coverage-measure) without a comprehensive
+understanding of the implementation details. Consequently, they might overlook
+the same corner cases that eluded me as the original author.
+
+Additionally, having a test-first approach will ensure less coupling between
+your components, and a better design of public interfaces.
+
+## Project setup
+
+The project is configured as a basic JavaScript module without any build steps.
+The  [initial
+commit](https://github.com/elvisvoer/b-path/commit/ea3654dc4da7d8e03e2947d3834f023a086ddd9e)
+introduces the necessary GitHub workflow to execute the pipeline, establishes a
+straightforward test setup utilizing the [built-in NodeJS test
+runner](https://nodejs.org/api/test.html), and uses a simple forwarding
+mechanism for the `node:path` module (as a starting point):
+
+```javascript
+// lib/b-path.js
+import path from "node:path";
+
+export default path;
+```
+
+## The TDD approach
+
+We are now ready to add our first tests and [make sure they
+fail](https://github.com/elvisvoer/b-path/actions/runs/7585405770/job/20661199864)
+by swapping our forwarding implementation with an empty one. Here is how
+that looks like:
+
+```javascript
+// tests/b-path.test.js
+import { describe, it } from "node:test";
+import assert from "node:assert/strict";
+import bPath from "../lib/b-path.js";
+
+describe("b-path", () => {
+  describe("POSIX", () => {
+    it("path.delimiter should provide the path delimiter", () => {
+      assert.strictEqual(bPath.delimiter, ":");
+    });
+
+    it("path.sep should provide the path separator", () => {
+      assert.strictEqual(bPath.sep, "/");
+    });
+  });
+});
+```
+
+```javascript
+// lib/b-path.js
+const posix = {
+  posix: null,
+  win32: null,
+};
+
+posix.posix = posix;
+
+export default posix;
+```
+
+Note that we will only focus on the POSIX implementation and completely ignore
+the Win32 API. With that in mind, we can now move to _**Step 3**_ and write the
+actual code, [making the tests
+pass](https://github.com/elvisvoer/b-path/actions/runs/7585416343/job/20661237405).
+This is as simple as adding the two missing properties to our `posix` object.
+
+<CodeBlock info={firstChange} print={print}>
+```javascript
+// lib/b-path.js
+const posix = {
+  delimiter: ":",
+  sep: "/",
+  posix: null,
+  win32: null,
+};
+```
+</CodeBlock>
+
+### path.isAbsolute(path)
+
+Moving on to `path.isAbsolute`, we'll once again start with an empty
+implementation and write some tests based on [the official
+documentation](https://nodejs.org/api/path.html#pathisabsolutepath).
+
+<CodeBlock info={isAbsoluteEmpty} print={print}>
+```javascript
+// lib/b-path.js
+const posix = {
+  isAbsolute: () => {},
+
+  delimiter: ":",
+  sep: "/",
+  posix: null,
+  win32: null,
+};
+```
+</CodeBlock>
+
+<br />
+
+<CodeBlock info={isAbsoluteTests} print={print}>
+```javascript
+// tests/b-path.test.js
+import { describe, it } from "node:test";
+import assert from "node:assert/strict";
+import bPath from "../lib/b-path.js";
+describe("b-path", () => {
+  describe("POSIX", () => {
+    it("path.delimiter should provide the path delimiter", () => {
+      assert.strictEqual(bPath.delimiter, ":");
+    });
+    it("path.sep should provide the path separator", () => {
+      assert.strictEqual(bPath.sep, "/");
+    });
+
+    // input | expected result
+    [
+      ["", false],
+      [".", false],
+      ["foo/", false],
+      ["foo.bar", false],
+      ["/foo/bar", true],
+      ["/baz/..", true],
+    ].forEach(([input, result]) => {
+      it(`path.isAbsolute("${input}") should return '${result}'`, () => {
+        assert.strictEqual(bPath.isAbsolute(input), result);
+      });
+    });
+  });
+});
+```
+</CodeBlock>
+
+_**Step 3**_ rightfully emphasizes that "_The primary objective is to ensure the
+test passes, rather than creating a fully-featured solution_". As you can see, I
+haven't written any tests to address scenarios where the input is not a
+`string` and we must raise a `TypeError`. We can incorporate those tests at a
+later stage, but for now, let's focus on making our existing tests pass.
+
+<CodeBlock info={isAbsoluteImpl} print={print}>
+```javascript
+// lib/b-path.js
+const posix = {
+  /**
+   * The isAbsolute() method determines if input path is an absolute path.
+   * @param {string} path - input path
+   * @returns {boolean}
+   */
+  isAbsolute: (path) => {
+    return !!path && path.charCodeAt(0) === posix.sep.charCodeAt(0);
+  },
+
+  delimiter: ":",
+  sep: "/",
+  posix: null,
+  win32: null,
+};
+```
+</CodeBlock>
+
+Running all tests (_**Step 4**_) will output the following results:
+
+```bash
+> b-path@0.0.0 test
+> node --test tests
+
+▶ b-path
+  ▶ POSIX
+    ✔ path.delimiter should provide the path delimiter (0.745045ms)
+    ✔ path.sep should provide the path separator (0.164463ms)
+    ✔ path.isAbsolute("") should return 'false' (0.186978ms)
+    ✔ path.isAbsolute(".") should return 'false' (0.125469ms)
+    ✔ path.isAbsolute("foo/") should return 'false' (0.250108ms)
+    ✔ path.isAbsolute("foo.bar") should return 'false' (0.204638ms)
+    ✔ path.isAbsolute("/foo/bar") should return 'true' (1.390664ms)
+    ✔ path.isAbsolute("/baz/..") should return 'true' (0.16196ms)
+  ▶ POSIX (4.772938ms)
+
+▶ b-path (6.41931ms)
+
+ℹ tests 8
+ℹ suites 2
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 104.492059
+
+```
+
+### The not-so-happy path
+
+Our current code and tests cover the "happy path" where the input is provided
+as expected. Now, let's address the "not-so-happy path" and consider various
+input types. As always, we'll start with the tests first.
+
+<CodeBlock info={assertStringTests} print={print}>
+```javascript
+// tests/b-path.test.js
+import { describe, it } from "node:test";
+import assert from "node:assert/strict";
+import bPath from "../lib/b-path.js";
+describe("b-path", () => {
+  describe("POSIX", () => {
+    // ...
+
+    [undefined, null, NaN, 42, BigInt(42), {}, [], Symbol(), false].forEach(
+      (input) => {
+        it(`path.isAbsolute should throw TypeError if input type is ${typeof input}`, () => {
+          assert.throws(
+            () => {
+              bPath.isAbsolute(input);
+            },
+            {
+              name: "TypeError",
+              message: `The "path" argument must be of type string. Received ${typeof input}`,
+            }
+          );
+        });
+      }
+    );
+  });
+});
+```
+</CodeBlock>
+
+And then proceed with the actual implementation.
+
+<CodeBlock info={assertStringImpl} print={print}>
+```javascript
+// lib/b-path.js
+/**
+ * The assertIsString() function verifies whether the input is a string,
+ * throwing a TypeError otherwise.
+ * @param {*} input
+ * @throws {TypeError}
+ */
+function assertIsString(input) {
+  if (typeof input !== "string") {
+    throw new TypeError(
+      `The "path" argument must be of type string. Received ${typeof input}`
+    );
+  }
+}
+
+const posix = {
+  /**
+   * The isAbsolute() method determines if input path is an absolute path.
+   * @param {string} path - input path
+   * @returns {boolean}
+   */
+  isAbsolute: (path) => {
+    assertIsString(path);
+    return !!path && path.charCodeAt(0) === posix.sep.charCodeAt(0);
+  },
+
+  // ...
+};
+```
+</CodeBlock>
+
+_That's all for now. I will continue tomorrow with some of the other
+methods and edit this post to document the journey._
+
+/Elvis
+
+
