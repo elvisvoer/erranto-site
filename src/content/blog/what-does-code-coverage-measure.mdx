@@ -9,7 +9,7 @@ tags:
 ---
 
 import CodeBlock from "../../components/CodeBlock.astro";
-export const coverage = [0, 0, "5x", 0, "1x", 0, "1x", 0, "1X", 0, "1X", 0, 0, "1X", 0, 0, 0, "1X"];
+export const coverage = [0, 0, 5, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1]
 
 This week, I was having a conversation with another engineer, and they had an
 interesting remark. They claimed that devops should have some control over a
@@ -90,7 +90,7 @@ similar to the one below. We have indeed covered all the branches of the
 `switch` statement, while all we asserted is if `true` is a value that is
 coerced to `true` when a `boolean` is expected.
 
-<CodeBlock info={coverage} showLineNumbers={true}>
+<CodeBlock info={coverage} showLineNumbers={true} print={(d) => `${d}x`}>
 ```javascript
 // foo.js
 function foo(...args) {
@@ -168,9 +168,9 @@ used earlier in the article.
 
 ````jsx
 import CodeBlock from "../../components/CodeBlock.astro";
-export const coverage = [0, 0, "5x", 0, "1x", 0, "1x", 0, "1X", 0, "1X", 0, 0, "1X", 0, 0, 0, "1X"]
+export const coverage = [0, 0, 5, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1]
 
-<CodeBlock info={coverage} showLineNumbers={true}>
+<CodeBlock info={coverage} showLineNumbers={true} print={(d) => `${d}x`}>
 ```javascript
 // foo.js
 function foo(...args) {

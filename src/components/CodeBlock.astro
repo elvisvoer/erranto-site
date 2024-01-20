@@ -1,5 +1,6 @@
 ---
-const { info, showLineNumbers } = Astro.props;
+const identity = (x: any) => x;
+const { info, print = identity, showLineNumbers } = Astro.props;
 const lineNumbers = Array.from([...Array(info.length).keys()]);
 ---
 
@@ -46,7 +47,7 @@ const lineNumbers = Array.from([...Array(info.length).keys()]);
   }
   <div class="code-info">
     <pre>{info.map((d: any) => {
-        const text = d ? `${d}` : " ";
+        const text = d ? `${print(d)}` : " ";
         return `${text}\n`;
       })}</pre>
   </div>
