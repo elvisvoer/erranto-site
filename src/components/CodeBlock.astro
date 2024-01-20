@@ -1,13 +1,12 @@
 ---
-const { coverage } = Astro.props;
-const lineNumbers = Array.from([...Array(coverage.length).keys()]);
+const { info, showLineNumbers } = Astro.props;
+const lineNumbers = Array.from([...Array(info.length).keys()]);
 ---
 
 <style is:global>
   .code-wrapper {
-    max-width: 100%;
-    display: grid;
-    grid-template-columns: 2rem 2rem minmax(0px, 1fr);
+    width: 100%;
+    display: flex;
   }
 
   .code-wrapper pre {
@@ -21,12 +20,13 @@ const lineNumbers = Array.from([...Array(coverage.length).keys()]);
     text-align: right;
   }
 
-  .code-wrapper .code-cov pre {
+  .code-wrapper .code-info pre {
     text-align: center;
   }
 
   .code-wrapper .code {
     background-color: #24292e;
+    flex-grow: 1;
   }
 
   .code-wrapper .code > pre {
@@ -35,12 +35,16 @@ const lineNumbers = Array.from([...Array(coverage.length).keys()]);
 </style>
 
 <div class="code-wrapper">
-  <div class="line-num">
-    <pre>{lineNumbers.map(num => `${num + 1}\n`)}</pre>
-  </div>
-  <div class="code-cov">
-    <pre>{coverage.map((cov: any) => {
-        const text = cov ? `${cov}x` : " ";
+  {
+    showLineNumbers && (
+      <div class="line-num">
+        <pre>{lineNumbers.map((num) => `${num + 1}\n`)}</pre>
+      </div>
+    )
+  }
+  <div class="code-info">
+    <pre>{info.map((d: any) => {
+        const text = d ? `${d}` : " ";
         return `${text}\n`;
       })}</pre>
   </div>

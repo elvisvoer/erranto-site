@@ -8,8 +8,8 @@ tags:
   - jest
 ---
 
-import CodeCov from "../../components/CodeCov.astro";
-export const coverage = [0, 0, 5, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1];
+import CodeBlock from "../../components/CodeBlock.astro";
+export const coverage = [0, 0, "5x", 0, "1x", 0, "1x", 0, "1X", 0, "1X", 0, 0, "1X", 0, 0, 0, "1X"];
 
 This week, I was having a conversation with another engineer, and they had an
 interesting remark. They claimed that devops should have some control over a
@@ -90,7 +90,7 @@ similar to the one below. We have indeed covered all the branches of the
 `switch` statement, while all we asserted is if `true` is a value that is
 coerced to `true` when a `boolean` is expected.
 
-<CodeCov coverage={coverage}>
+<CodeBlock info={coverage} showLineNumbers={true}>
 ```javascript
 // foo.js
 function foo(...args) {
@@ -111,7 +111,7 @@ function foo(...args) {
 
 module.exports = foo;
 ```
-</CodeCov>
+</CodeBlock>
 
 Nice cheat! We didn't even care that `undef.something` will throw an
 `Uncaught ReferenceError: undef is not defined` exception, all the errors
@@ -163,14 +163,14 @@ console.log(JSON.stringify(foo.__cov__));
 
 Et voilà, it printed the same array that I've used to configure the [code
 coverage
-component](https://github.com/elvisvoer/erranto-site/blob/main/src/components/CodeCov.astro)
+component](https://github.com/elvisvoer/erranto-site/blob/main/src/components/CodeBlock.astro)
 used earlier in the article.
 
 ````jsx
-import CodeCov from "../../components/CodeCov.astro";
-export const coverage = [0, 0, 5, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1];
+import CodeBlock from "../../components/CodeBlock.astro";
+export const coverage = [0, 0, "5x", 0, "1x", 0, "1x", 0, "1X", 0, "1X", 0, 0, "1X", 0, 0, 0, "1X"]
 
-<CodeCov coverage={coverage}>
+<CodeBlock info={coverage} showLineNumbers={true}>
 ```javascript
 // foo.js
 function foo(...args) {
@@ -191,7 +191,7 @@ function foo(...args) {
 
 module.exports = foo;
 ```
-</CodeCov>
+</CodeBlock>
 ````
 
 ### Is code coverage useless then?
