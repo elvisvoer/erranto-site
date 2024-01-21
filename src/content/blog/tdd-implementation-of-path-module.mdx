@@ -486,6 +486,29 @@ passing](https://github.com/elvisvoer/b-path/actions/runs/7600686450/job/2069920
 Nonetheless, I find it okay since [v20.x transitioned to a Long Term Support
 version](https://nodejs.org/en/blog/release/v20.9.0) last October.
 
+As for the extra tests, I went ahead and included [a few more test
+cases](https://github.com/elvisvoer/b-path/commit/8716862de2f3dca0fb005e8280afc9b3fd758422).
+What caught me off guard was that a trailing slash is added to the `dir`
+property even if it already exists. The only scenario where this doesn't occur
+is if `root` is equal to `dir`, as specified in the docs. I had anticipated that
+the resulting path would be normalized but that's not the case. Consequently, I
+had to modify my implementation to match the original behavior by making the
+following change:
+
+<CodeBlock info={[0, 0, 2, 1, 0, 0, 0]} print={print}>
+```javascript
+const root = pathObject.root || "";
+let dir = pathObject.dir || "";
+if (dir && dir.charCodeAt(dir.length - 1) !== posix.sep.charCodeAt(0)) {
+if (dir && dir !== root) {
+  dir = `${dir}${posix.sep}`;
+}
+const base = pathObject.base || "";
+```
+</CodeBlock>
+
+### path.parse(path)
+
 _To be continued..._
 
 /Elvis
