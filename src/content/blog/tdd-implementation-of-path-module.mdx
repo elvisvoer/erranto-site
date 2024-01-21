@@ -374,30 +374,30 @@ tests](https://github.com/elvisvoer/b-path/commit/c3aae309dc9c476de37013487b1bb0
 
 <CodeBlock info={noSeparatorTests} print={print}>
 ```javascript
-    // input | expected result
-    [
-      [{}, ""],
-      [{ root: "/root" }, "/root"],
-      [{ root: "/root", name: "file", ext: ".txt" }, "/root/file.txt"],
-      // only root is present so no separator is included
-      [{ root: "/root", name: "file", ext: ".txt" }, "/rootfile.txt"],
-      [{ root: "/root/", name: "file", ext: ".txt" }, "/root/file.txt"],
-      // should add the extension "." if missing
-      [{ root: "/root", name: "file", ext: "txt" }, "/root/file.txt"],
-      [{ root: "/root/", name: "file", ext: "txt" }, "/root/file.txt"],
-      // should ignore 'name' and 'ext' if 'base' is present
-      [{ root: "/root", base: "base.sh", name: "file", ext: ".txt" }, "/root/base.sh"],
-      [{ root: "/root/", base: "base.sh", name: "file", ext: ".txt" }, "/root/base.sh"],
-      // should ignore 'root' if 'dir' is present
-      [{ root: "/root", dir: "/dir", base: "file.txt"}, "/dir/file.txt"],
-      [{ root: "/root/", dir: "/dir", base: "file.txt"}, "/dir/file.txt"],
-    ].forEach(([input, result]) => {
-      it(`path.format(${JSON.stringify(
-        input
-      )}) should return '${result}'`, () => {
-        assert.strictEqual(bPath.format(input), result);
-      });
-    });
+// input | expected result
+[
+  [{}, ""],
+  [{ root: "/root" }, "/root"],
+  [{ root: "/root", name: "file", ext: ".txt" }, "/root/file.txt"],
+  // only root is present so no separator is included
+  [{ root: "/root", name: "file", ext: ".txt" }, "/rootfile.txt"],
+  [{ root: "/root/", name: "file", ext: ".txt" }, "/root/file.txt"],
+  // should add the extension "." if missing
+  [{ root: "/root", name: "file", ext: "txt" }, "/root/file.txt"],
+  [{ root: "/root/", name: "file", ext: "txt" }, "/root/file.txt"],
+  // should ignore 'name' and 'ext' if 'base' is present
+  [{ root: "/root", base: "base.sh", name: "file", ext: ".txt" }, "/root/base.sh"],
+  [{ root: "/root/", base: "base.sh", name: "file", ext: ".txt" }, "/root/base.sh"],
+  // should ignore 'root' if 'dir' is present
+  [{ root: "/root", dir: "/dir", base: "file.txt"}, "/dir/file.txt"],
+  [{ root: "/root/", dir: "/dir", base: "file.txt"}, "/dir/file.txt"],
+].forEach(([input, result]) => {
+  it(`path.format(${JSON.stringify(
+    input
+  )}) should return '${result}'`, () => {
+    assert.strictEqual(bPath.format(input), result);
+  });
+});
 ```
 </CodeBlock>
 
@@ -437,40 +437,40 @@ solution](https://github.com/elvisvoer/b-path/compare/v0.1.0-rc1...v0.1.0-rc2)
 would look like:
 
 ```javascript
-  /**
-   * The path.format() method returns a path string from an object.
-   * This is the opposite of `path.parse()`.
-   * @param {object} pathObject
-   * @param {string} pathObject.root
-   * @param {string} pathObject.dir
-   * @param {string} pathObject.base
-   * @param {string} pathObject.name
-   * @param {string} pathObject.ext
-   * @returns {string}
-   */
-  format: (pathObject) => {
-    const result = [];
+/**
+ * The path.format() method returns a path string from an object.
+ * This is the opposite of `path.parse()`.
+ * @param {object} pathObject
+ * @param {string} pathObject.root
+ * @param {string} pathObject.dir
+ * @param {string} pathObject.base
+ * @param {string} pathObject.name
+ * @param {string} pathObject.ext
+ * @returns {string}
+ */
+format: (pathObject) => {
+  const result = [];
 
-    const root = pathObject.root || "";
-    let dir = pathObject.dir || "";
-    if (dir && dir.charCodeAt(dir.length - 1) !== posix.sep.charCodeAt(0)) {
-      dir = `${dir}${posix.sep}`;
-    }
-    const base = pathObject.base || "";
-    const name = pathObject.name || "";
-    let ext = pathObject.ext || "";
-    if (ext && ext.charCodeAt(0) !== ".".charCodeAt(0)) {
-      ext = `.${ext}`;
-    }
+  const root = pathObject.root || "";
+  let dir = pathObject.dir || "";
+  if (dir && dir.charCodeAt(dir.length - 1) !== posix.sep.charCodeAt(0)) {
+    dir = `${dir}${posix.sep}`;
+  }
+  const base = pathObject.base || "";
+  const name = pathObject.name || "";
+  let ext = pathObject.ext || "";
+  if (ext && ext.charCodeAt(0) !== ".".charCodeAt(0)) {
+    ext = `.${ext}`;
+  }
 
-    const dirName = dir || root;
-    const baseName = base || `${name}${ext}`;
+  const dirName = dir || root;
+  const baseName = base || `${name}${ext}`;
 
-    if (dirName) result.push(dirName);
-    if (baseName) result.push(baseName);
+  if (dirName) result.push(dirName);
+  if (baseName) result.push(baseName);
 
-    return result.join("");
-  },
+  return result.join("");
+},
 ```
 
 I'll now proceed to substitute our current implementation with the 'forwarding
