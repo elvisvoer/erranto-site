@@ -491,7 +491,7 @@ cases](https://github.com/elvisvoer/b-path/commit/8716862de2f3dca0fb005e8280afc9
 What caught me off guard was that a trailing slash is added to the `dir`
 property even if it already exists. The only scenario where this doesn't occur
 is if `root` is equal to `dir`, as specified in the docs. I had anticipated that
-the resulting path would be normalized but that's not the case. Consequently, I
+the resulting path would be normalized but it doesn't seem so. Consequently, I
 had to modify my implementation to match the original behavior by making the
 following change:
 
