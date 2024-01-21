@@ -1,6 +1,6 @@
 ---
-title: "A TDD implementation of NodeJS Path module"
-description: "A test-driven development implementation of the NodeJS Path module"
+title: "A TDD implementation of Node.js Path module"
+description: "A test-driven development implementation of the Node.js Path module"
 slug: "tdd-implementation-of-nodejs-path-module"
 created: "2024-01-20T21:32:00.000Z"
 tags:
@@ -21,6 +21,8 @@ export const assertStringTests = [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1,
 1, 1, 1, 1, 1, 1, 1, 1, 0, 0];
 export const assertStringImpl = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0];
+export const noSeparatorTests = [0, 0, 0, 0, 2, 1, 1, 1, 0, 2, 1, 0, 2, 1, 0,
+2, 1, 0, 0, 0, 0, 0, 0, 0];
 
 **How many TDD practitioners does it take to change a light bulb?** _They don't
 change the bulb; they refactor the darkness!_
@@ -34,7 +36,7 @@ TDD and how great it is but I am yet to find a team that practices it
 consistently.
 
 Ironically, I've chosen to join the advocates group by documenting a
-step-by-step [TDD implementation of the NodeJS Path
+step-by-step [TDD implementation of the Node.js Path
 module](https://github.com/elvisvoer/b-path). But before we dive in, you might
 be wondering, _**'What is test-driven development?'**_ I have asked ChatGPT to
 answer this question for you, and here is the result:
@@ -97,7 +99,7 @@ The project is configured as a basic JavaScript module without any build steps.
 The  [initial
 commit](https://github.com/elvisvoer/b-path/commit/ea3654dc4da7d8e03e2947d3834f023a086ddd9e)
 introduces the necessary GitHub workflow to execute the pipeline, establishes a
-straightforward test setup utilizing the [built-in NodeJS test
+straightforward test setup utilizing the [built-in Node.js test
 runner](https://nodejs.org/api/test.html), and uses a simple forwarding
 mechanism for the `node:path` module (as a starting point):
 
@@ -348,8 +350,143 @@ const posix = {
 ```
 </CodeBlock>
 
-_That's all for now. I will continue tomorrow with some of the other
-methods and edit this post to document the journey._
+### path.format(pathObject)
+
+We continue our reverse engineering process with `path.format`. This method
+takes a `pathObject` as input and returns a `path` string based on the rules
+specified in [the docs](https://nodejs.org/api/path.html#pathformatpathobject).
+We'll start with the "happy path" where the input is an `object` and we'll deal
+with the rest later. Once we have completed our implementation, I will swap it
+back with the 'forwarding mechanism' mentioned earlier to check that we have the
+right functionality.
+
+Documenting every single step here would occupy too much space, instead, I have
+tagged the commits with pre-release tags to get a better overview. The [very
+first
+version](https://github.com/elvisvoer/b-path/compare/v0.1.0-rc0...v0.1.0-rc1) is
+somehow naive but it does cover most of the cases, which is a great starting
+point.
+
+We should now handle the following scenario: "_If only `root` is provided or
+`dir` is equal to `root` then the platform separator will not be included_". To
+do so, we need to [make some changes to our
+tests](https://github.com/elvisvoer/b-path/commit/c3aae309dc9c476de37013487b1bb0fcb392c84b?diff=unified&w=0).
+
+<CodeBlock info={noSeparatorTests} print={print}>
+```javascript
+    // input | expected result
+    [
+      [{}, ""],
+      [{ root: "/root" }, "/root"],
+      [{ root: "/root", name: "file", ext: ".txt" }, "/root/file.txt"],
+      // only root is present so no separator is included
+      [{ root: "/root", name: "file", ext: ".txt" }, "/rootfile.txt"],
+      [{ root: "/root/", name: "file", ext: ".txt" }, "/root/file.txt"],
+      // should add the extension "." if missing
+      [{ root: "/root", name: "file", ext: "txt" }, "/root/file.txt"],
+      [{ root: "/root/", name: "file", ext: "txt" }, "/root/file.txt"],
+      // should ignore 'name' and 'ext' if 'base' is present
+      [{ root: "/root", base: "base.sh", name: "file", ext: ".txt" }, "/root/base.sh"],
+      [{ root: "/root/", base: "base.sh", name: "file", ext: ".txt" }, "/root/base.sh"],
+      // should ignore 'root' if 'dir' is present
+      [{ root: "/root", dir: "/dir", base: "file.txt"}, "/dir/file.txt"],
+      [{ root: "/root/", dir: "/dir", base: "file.txt"}, "/dir/file.txt"],
+    ].forEach(([input, result]) => {
+      it(`path.format(${JSON.stringify(
+        input
+      )}) should return '${result}'`, () => {
+        assert.strictEqual(bPath.format(input), result);
+      });
+    });
+```
+</CodeBlock>
+
+We may attempt to correct our implementation by adjusting the return statement
+to `return result.join("");`. However, this adjustment would lead to a failure in
+our `dir` test:
+
+```bash
+✖ failing tests:
+
+✖ path.format({"root":"/root/","dir":"/dir","base":"file.txt"}) should return '/dir/file.txt' (2.433298ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+
+  + '/dirfile.txt'
+  - '/dir/file.txt'
+         ^
+      at TestContext.<anonymous> (file:///home/elvis/eadomnica/b-path/tests/b-path.test.js:62:16)
+      at Test.runInAsyncScope (node:async_hooks:206:9)
+      at Test.run (node:internal/test_runner/test:580:25)
+      at Suite.processPendingSubtests (node:internal/test_runner/test:325:18)
+      at Test.postRun (node:internal/test_runner/test:649:19)
+      at Test.run (node:internal/test_runner/test:608:10)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:325:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '/dirfile.txt',
+    expected: '/dir/file.txt',
+    operator: 'strictEqual'
+  }
+```
+
+We can address this issue by ensuring that `dir` always includes a trailing
+slash, much like how we handled the absence of a dot in the extension. Here's
+what our [updated
+solution](https://github.com/elvisvoer/b-path/compare/v0.1.0-rc1...v0.1.0-rc2)
+would look like:
+
+```javascript
+  /**
+   * The path.format() method returns a path string from an object.
+   * This is the opposite of `path.parse()`.
+   * @param {object} pathObject
+   * @param {string} pathObject.root
+   * @param {string} pathObject.dir
+   * @param {string} pathObject.base
+   * @param {string} pathObject.name
+   * @param {string} pathObject.ext
+   * @returns {string}
+   */
+  format: (pathObject) => {
+    const result = [];
+
+    const root = pathObject.root || "";
+    let dir = pathObject.dir || "";
+    if (dir && dir.charCodeAt(dir.length - 1) !== posix.sep.charCodeAt(0)) {
+      dir = `${dir}${posix.sep}`;
+    }
+    const base = pathObject.base || "";
+    const name = pathObject.name || "";
+    let ext = pathObject.ext || "";
+    if (ext && ext.charCodeAt(0) !== ".".charCodeAt(0)) {
+      ext = `.${ext}`;
+    }
+
+    const dirName = dir || root;
+    const baseName = base || `${name}${ext}`;
+
+    if (dirName) result.push(dirName);
+    if (baseName) result.push(baseName);
+
+    return result.join("");
+  },
+```
+
+I'll now proceed to substitute our current implementation with the 'forwarding
+mechanism' to confirm its correctness. Please note that the `assertIsString`
+function doesn't yield the same `TypeError` message, so I'll need to comment out
+those specific tests. Additionally, I'll take this opportunity to write more
+tests, covering various corner cases.
+
+...
+
+This is slightly unexpected, only [Node.js v20.x tests are
+passing](https://github.com/elvisvoer/b-path/actions/runs/7600686450/job/20699202829).
+Nonetheless, I find it okay since [v20.x transitioned to a Long Term Support
+version](https://nodejs.org/en/blog/release/v20.9.0) last October.
+
+_To be continued..._
 
 /Elvis
 
