@@ -221,11 +221,11 @@ describe("b-path", () => {
 ```
 </CodeBlock>
 
-_**Step 3**_ rightfully emphasizes that "_The primary objective is to ensure the
+_**Step 3**_ rightfully emphasizes that "_the primary objective is to ensure the
 test passes, rather than creating a fully-featured solution_". As you can see, I
-haven't written any tests to address scenarios where the input is not a
-`string` and we must raise a `TypeError`. We can incorporate those tests at a
-later stage, but for now, let's focus on making our existing tests pass.
+haven't written any tests to address scenarios where the input is not a `string`
+and we must raise a `TypeError`. We can incorporate those tests a bit later, but
+for now, let's focus on making our existing tests pass.
 
 <CodeBlock info={isAbsoluteImpl} print={print}>
 ```javascript
@@ -248,7 +248,7 @@ const posix = {
 ```
 </CodeBlock>
 
-Running all tests (_**Step 4**_) will output the following results:
+Running all the tests (_**Step 4**_) will now output the following results:
 
 ```bash
 > b-path@0.0.0 test
@@ -281,9 +281,10 @@ Running all tests (_**Step 4**_) will output the following results:
 
 ### The not-so-happy path
 
-Our current code and tests cover the "happy path" where the input is provided
-as expected. Now, let's address the "not-so-happy path" and consider various
-input types. As always, we'll start with the tests first.
+As mentioned earlier, our current code and tests only cover the "happy path"
+where the input is provided as expected. Now, let's address the "not-so-happy
+path" and consider various input types. As always, we'll start with the tests
+first.
 
 <CodeBlock info={assertStringTests} print={print}>
 ```javascript
@@ -357,8 +358,8 @@ takes a `pathObject` as input and returns a `path` string based on the rules
 specified in [the docs](https://nodejs.org/api/path.html#pathformatpathobject).
 We'll start with the "happy path" where the input is an `object` and we'll deal
 with the rest later. Once we have completed our implementation, we can swap it
-back with the 'forwarding mechanism' mentioned earlier to check that we have the
-right functionality.
+back with the 'forwarding mechanism' from the project setup and check that we
+have the right functionality.
 
 Documenting every single step here would occupy too much space, instead, I have
 tagged the commits with pre-release tags to get a better overview. The [very
