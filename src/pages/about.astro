@@ -1,4 +1,6 @@
 ---
+import { Picture } from "astro:assets";
+import elvis from "../../public/assets/Elvis.jpg"
 import Layout from "../layout/default.astro";
 ---
 
@@ -7,11 +9,13 @@ import Layout from "../layout/default.astro";
     <div
       class="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row hover:bg-gray-100 dark:border-gray-800 dark:bg-gray-900 dark:hover:bg-gray-800"
     >
-      <img
-        class="object-cover w-full max-w-md rounded-t-lg h-auto md:h-auto md:format-md md:rounded-none md:rounded-s-lg"
-        src="/assets/Elvis.jpg"
+      <Picture
+        formats={["avif", "webp"]}
+        class="w-full md:w-auto max-w-md rounded-t-lg h-auto md:h-auto md:format-md md:rounded-none md:rounded-s-lg"
+        src={elvis}
         alt="Elvis Adomnica"
       />
+
       <div
         class="flex flex-col format dark:format-invert text-gray-900 dark:text-gray-200 dark:format-code:bg-gray-700 justify-between p-4 leading-normal"
       >
@@ -35,11 +39,12 @@ import Layout from "../layout/default.astro";
           of Copenhagen, Denmark.
         </p>
         <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
-          As a professional programmer for about {new Date().getFullYear() - 2009} years,
-          my expertise spans over various realms, from frontend and backend development
-          to desktop applications using Electron. At the moment, I'm working on projects
-          involving React and Node.js using TypeScript, and leveraging Java for other
-          type of services.
+          As a professional programmer for about {
+            new Date().getFullYear() - 2009
+          } years, my expertise spans over various realms, from frontend and backend
+          development to desktop applications using Electron. At the moment, I'm
+          working on projects involving React and Node.js using TypeScript, and leveraging
+          Java for other type of services.
         </p>
         <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
           Beyond coding, I find joy in spending time with my family,
