@@ -500,7 +500,7 @@ following change:
 ```javascript
 const root = pathObject.root || "";
 let dir = pathObject.dir || "";
-if (dir && dir.charCodeAt(dir.length - 1) !== posix.sep.charCodeAt(0)) {
+if (dir && dir.charCodeAt(dir.length - 1) !== posix.sep.charCodeAt(0))
 if (dir && dir !== root) {
   dir = `${dir}${posix.sep}`;
 }
@@ -512,6 +512,38 @@ The full diff of the TDD approach for `path.format` (including the input check)
 can be seen
 [here](https://github.com/elvisvoer/b-path/compare/v0.1.0-rc0...v0.1.0-rc3).
 Keep in mind that the commit at the bottom of the page is in fact our top commit.
+
+### path.normalize
+
+Before we continue with `path.parse` and friends (`path.basename`,
+`path.dirname`, `path.extname`), let's address one of the elephants in the room:
+`path.normalize`.
+
+We can start by [modifying the input sanity check
+test](https://github.com/elvisvoer/b-path/compare/v0.1.0-rc3...v0.1.0-rc4) from
+`path.isAbsolute` to include our new method. With that out of the way, we
+can now think of the best approach in handling such a complex function.
+
+I must admit that I have already done this exercise last
+year, but I have deleted my repository, so I will have to do this all over
+again. If I remember correctly, the approach I took was to split the string by
+the `path.sep` and use a `reduce` function to compute the normalized path. While
+this will work, I cannot stop and think about the amount of intermediate objects
+created and the time spent traversing the input multiple times. Can we do the
+normalization in one go? Well, I guess we can, with the good-old `for` loop.
+
+...
+
+Alright! [The implementation so
+far](https://github.com/elvisvoer/b-path/compare/v0.1.0-rc4...v0.1.0-rc5) is not
+as crazy as I would have thought, but there are definitely some unhandled corner
+cases that I will be adding later. At this point, there are a total of 20
+commits, [one of
+which](https://github.com/elvisvoer/b-path/commit/6148439491b08c48d430136ccc719f2a591e8873)
+includes a small refactoring. This is by far the biggest advantage of
+test-driven development: you can refactor your code as you see fit while having
+the reassurance that it will still function correctly. And, on top of that, we
+preserved 100% code coverage.
 
 ### path.parse(path)
 
