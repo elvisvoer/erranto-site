@@ -1,15 +1,16 @@
 ---
 import { Picture } from "astro:assets";
-import elvis from "../../public/assets/Elvis.jpg"
+import elvis from "../../public/assets/Elvis.jpg";
 import Layout from "../layout/default.astro";
 ---
 
 <Layout pageTitle="About" description="About me, Elvis Adomnica">
   <div class="md:m-0 m-auto">
     <div
-      class="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row hover:bg-gray-100 dark:border-gray-800 dark:bg-gray-900 dark:hover:bg-gray-800"
+      class="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row dark:border-gray-800 dark:bg-gray-900"
     >
       <Picture
+        widths={[240, 540, 720, elvis.width]}
         formats={["avif", "webp"]}
         class="w-full md:w-auto max-w-md rounded-t-lg h-auto md:h-auto md:format-md md:rounded-none md:rounded-s-lg"
         src={elvis}
