@@ -545,6 +545,216 @@ test-driven development: you can refactor your code as you see fit while having
 the reassurance that it will still function correctly. And, on top of that, we
 preserved 100% code coverage.
 
+After adding the [promised corner
+cases](https://github.com/elvisvoer/b-path/commit/e2eda3d05526cc176a545bab940100b67321fb87),
+there was a need for some [small
+adjustments](https://github.com/elvisvoer/b-path/commit/4b7f40327647d0126a07ba7225d317240b353078),
+mainly around how to handle navigating up from the top directory. But wait, what
+about some paths that make absolutely no sense? Something like:
+
+```javascript
+["...", "..."], // makes no sense
+[".../.", "..."], // same
+[".../..", "."], // same
+```
+
+We are reverse engineering the existing behavior so I guess I will have to go
+ahead and [fix those as
+well](https://github.com/elvisvoer/b-path/commit/494bef2601d28c9bf8d9335c3eeca7c330262514).
+Even with such a non-sense corner case, our final implementation doesn't look
+very complex. Of course, as the author of the code I am extremely biased on
+this. Actually, as I pasted the code here, I realized [I can do one more
+improvement](https://github.com/elvisvoer/b-path/commit/e1e3d8e501066c4e26cd001c71157a5380932036).
+This is the final final version, I promise (unless you find a bug).
+
+```javascript
+/**
+ * Normalize a string path, reducing '..' and '.' parts.
+ * When multiple slashes are found, they're replaced by a single one;
+ * when the path contains a trailing slash, it is preserved.
+ *
+ * @param path string path to normalize.
+ * @throws {TypeError} if `path` is not a string.
+ */
+normalize: (path) => {
+  assertIsString(path);
+
+  if (path.length === 0) {
+    return ".";
+  }
+
+  if (path.length === 1) {
+    return path;
+  }
+
+  const hasTrailingSep = path.charAt(path.length - 1) === posix.sep;
+  const absolute = posix.isAbsolute(path);
+  const fragments = [];
+  let word = "";
+  let dots = 0;
+
+  const handleFragment = () => {
+    if (dots > 2) {
+      fragments.push(Array(dots).fill(".").join(""));
+    }
+
+    if (dots === 2) {
+      if (fragments.length && fragments[fragments.length - 1] !== "..") {
+        // navigate up but don't pop an existing ".."
+        fragments.pop();
+      } else if (!absolute) {
+        // top reached and relative path,
+        // absolute path is handled in the if (fragments.length === 0) below
+        fragments.push("..");
+      }
+    }
+
+    if (word.length) {
+      fragments.push(word);
+    }
+  };
+
+  for (let i = 0; i < path.length; i += 1) {
+    // duplicated sep, skip
+    if (
+      path.charAt(i) === posix.sep &&
+      i - 1 >= 0 &&
+      path.charAt(i - 1) === posix.sep
+    ) {
+      continue;
+    }
+
+    if (path.charAt(i) === ".") {
+      dots += 1;
+      continue;
+    }
+
+    if (path.charAt(i) === posix.sep) {
+      handleFragment();
+
+      word = "";
+      dots = 0;
+      continue;
+    }
+
+    word += path.charAt(i);
+  }
+
+  handleFragment();
+
+  if (fragments.length === 0) {
+    if (absolute) {
+      return posix.sep;
+    }
+
+    return hasTrailingSep ? "./" : ".";
+  }
+
+  let result = fragments.join(posix.sep);
+  if (hasTrailingSep) {
+    result += posix.sep;
+  }
+
+  return result;
+},
+```
+
+For comparison, I have found a package that contains the posix-only
+implementation called
+[path-browserify](https://github.com/browserify/path-browserify/blob/master/index.js)
+, which is actually an extract from Node.js v8.11.1 codebase. This is how that looks
+like:
+
+```javascript
+// Resolves . and .. elements in a path with directory names
+function normalizeStringPosix(path, allowAboveRoot) {
+  var res = '';
+  var lastSegmentLength = 0;
+  var lastSlash = -1;
+  var dots = 0;
+  var code;
+  for (var i = 0; i <= path.length; ++i) {
+    if (i < path.length)
+      code = path.charCodeAt(i);
+    else if (code === 47 /*/*/)
+      break;
+    else
+      code = 47 /*/*/;
+    if (code === 47 /*/*/) {
+      if (lastSlash === i - 1 || dots === 1) {
+        // NOOP
+      } else if (lastSlash !== i - 1 && dots === 2) {
+        if (res.length < 2 || lastSegmentLength !== 2 || res.charCodeAt(res.length - 1) !== 46 /*.*/ || res.charCodeAt(res.length - 2) !== 46 /*.*/) {
+          if (res.length > 2) {
+            var lastSlashIndex = res.lastIndexOf('/');
+            if (lastSlashIndex !== res.length - 1) {
+              if (lastSlashIndex === -1) {
+                res = '';
+                lastSegmentLength = 0;
+              } else {
+                res = res.slice(0, lastSlashIndex);
+                lastSegmentLength = res.length - 1 - res.lastIndexOf('/');
+              }
+              lastSlash = i;
+              dots = 0;
+              continue;
+            }
+          } else if (res.length === 2 || res.length === 1) {
+            res = '';
+            lastSegmentLength = 0;
+            lastSlash = i;
+            dots = 0;
+            continue;
+          }
+        }
+        if (allowAboveRoot) {
+          if (res.length > 0)
+            res += '/..';
+          else
+            res = '..';
+          lastSegmentLength = 2;
+        }
+      } else {
+        if (res.length > 0)
+          res += '/' + path.slice(lastSlash + 1, i);
+        else
+          res = path.slice(lastSlash + 1, i);
+        lastSegmentLength = i - lastSlash - 1;
+      }
+      lastSlash = i;
+      dots = 0;
+    } else if (code === 46 /*.*/ && dots !== -1) {
+      ++dots;
+    } else {
+      dots = -1;
+    }
+  }
+  return res;
+}
+
+//...
+
+function normalize(path) {
+  assertPath(path);
+
+  if (path.length === 0) return '.';
+
+  var isAbsolute = path.charCodeAt(0) === 47 /*/*/;
+  var trailingSeparator = path.charCodeAt(path.length - 1) === 47 /*/*/;
+
+  // Normalize the path
+  path = normalizeStringPosix(path, !isAbsolute);
+
+  if (path.length === 0 && !isAbsolute) path = '.';
+  if (path.length > 0 && trailingSeparator) path += '/';
+
+  if (isAbsolute) return '/' + path;
+  return path;
+},
+```
+
+You can be the judge of which version is easier to grasp.
+
 ### path.parse(path)
 
 _To be continued..._
