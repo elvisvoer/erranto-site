@@ -563,7 +563,7 @@ ahead and [fix those as
 well](https://github.com/elvisvoer/b-path/commit/494bef2601d28c9bf8d9335c3eeca7c330262514).
 Even with such a non-sense corner case, our final implementation doesn't look
 very complex. Of course, as the author of the code I am extremely biased on
-this. Actually, as I pasted the code here, I realized [I can do one more
+this. And actually, as I pasted the code here, I realized [I can do one more
 improvement](https://github.com/elvisvoer/b-path/commit/e1e3d8e501066c4e26cd001c71157a5380932036).
 This is the final final version, I promise (unless you find a bug).
 
@@ -661,9 +661,8 @@ normalize: (path) => {
 
 For comparison, I have found a package that contains the posix-only
 implementation called
-[path-browserify](https://github.com/browserify/path-browserify/blob/master/index.js)
-, which is actually an extract from Node.js v8.11.1 codebase. This is how that looks
-like:
+[path-browserify](https://github.com/browserify/path-browserify/blob/master/index.js),
+which is an extract from Node.js v8.11.1 codebase. This is how that looks like:
 
 ```javascript
 // Resolves . and .. elements in a path with directory names
