@@ -23,7 +23,7 @@
     "flowbite": "^2.3.0",
     "flowbite-typography": "^1.0.3",
     "markdown-it": "^14.0.0",
-    "sanitize-html": "^2.11.0",
+    "sanitize-html": "^2.12.1",
     "svelte": "^4.2.11",
     "tailwind-merge": "^2.2.1",
     "tailwind-scrollbar": "^3.1.0",
