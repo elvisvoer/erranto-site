@@ -3,5 +3,9 @@ const defaultContext: any = {
 };
 
 export function evalSafe(code: string, ctx = defaultContext) {
-  new Function(...Object.keys(ctx), code).bind(ctx)(...Object.values(ctx));
+  try {
+    new Function(...Object.keys(ctx), code).bind(ctx)(...Object.values(ctx));
+  } catch (err) {
+    ctx.console.error(err);
+  }
 }
