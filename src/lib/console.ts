@@ -9,16 +9,17 @@ export class HTMLConsoleDriver {
     this.rootNode.style.display = "none";
   }
 
-  public write(style?: { color: string }, ...data: string[]) {
+  public write(style?: { color: string }, ...data: unknown[]) {
     const s = { ...defaultStyle, ...(style || {}) };
     const prefix = `<span style="${Object.entries(s)
       .map(([key, val]) => `${key}: ${val} !important;`)
       .join(" ")}">`;
     const suffix = `</span>`;
-    this.rootNode.innerHTML += `${prefix}${data.join(" ")}${suffix}`;
+
+    this.rootNode.innerHTML += `${prefix}${data.map(d => String(d)).join(" ")}${suffix}`;
   }
 
-  public writeln(style?: { color: string }, ...data: string[]) {
+  public writeln(style?: { color: string }, ...data: unknown[]) {
     this.write(style, ...data);
     this.write(undefined, "<br />");
   }
@@ -37,20 +38,20 @@ export class VirtualConsole {
     this.log("Virtual Console initialized!");
   }
 
-  log(...args: string[]) {
+  log(...args: unknown[]) {
     this.driver.writeln(undefined, ...args);
   }
 
-  debug(...args: string[]) {
+  debug(...args: unknown[]) {
     this.driver.writeln(undefined, ...args);
   }
 
-  info(...args: string[]) {
+  info(...args: unknown[]) {
     args.unshift("&#x1F6C8;");
     this.driver.writeln(undefined, ...args);
   }
 
-  error(...args: string[]) {
+  error(...args: unknown[]) {
     args.unshift("&#x1F6C8;");
     this.driver.writeln(
       {
