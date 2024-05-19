@@ -1,27 +1,46 @@
 const defaultStyle = {
-  color: "rgb(247, 250, 252)",
   "white-space": "pre-wrap",
-  "font-size": "0.8888889em;",
+  "font-size": "0.8888889em",
+  padding: "0 .5rem",
+  color: "white",
 };
+
+function getColor(data: unknown) {
+  switch (true) {
+    case data === undefined:
+    case data === null:
+      return "gray";
+    case typeof data === "number":
+    case typeof data === "boolean":
+      return "green";
+    case Object.getPrototypeOf(data) === Error.prototype:
+      return "pink";
+    default:
+      return "inherit";
+  }
+}
 
 export class HTMLConsoleDriver {
   constructor(private rootNode: HTMLDivElement) {
     this.rootNode.style.display = "none";
+    this.rootNode.style.flexDirection = "column";
+    this.rootNode.style.gap = "0.2rem";
   }
 
-  public write(style?: { color: string }, ...data: unknown[]) {
-    const s = { ...defaultStyle, ...(style || {}) };
-    const prefix = `<span style="${Object.entries(s)
+  public writeln(style: any = {}, ...data: unknown[]) {
+    const s = { ...defaultStyle, ...style };
+    const containerStyle = Object.entries(s)
       .map(([key, val]) => `${key}: ${val} !important;`)
-      .join(" ")}">`;
-    const suffix = `</span>`;
+      .join(" ");
 
-    this.rootNode.innerHTML += `${prefix}${data.map(d => String(d)).join(" ")}${suffix}`;
-  }
+    const words = data
+      .map(
+        (d) =>
+          `<span style="color: ${getColor(d)} !important;">${String(d)}</span>`
+      )
+      .join(" ");
 
-  public writeln(style?: { color: string }, ...data: unknown[]) {
-    this.write(style, ...data);
-    this.write(undefined, "<br />");
+    this.rootNode.innerHTML += `<div style="${containerStyle}">${words}</div>`;
   }
 
   public clear() {
@@ -29,7 +48,7 @@ export class HTMLConsoleDriver {
   }
 
   public show() {
-    this.rootNode.style.display = "block";
+    this.rootNode.style.display = "flex";
   }
 }
 
@@ -42,44 +61,18 @@ export class VirtualConsole {
     this.driver.writeln(undefined, ...args);
   }
 
-  debug(...args: unknown[]) {
-    this.driver.writeln(undefined, ...args);
-  }
-
   info(...args: unknown[]) {
-    args.unshift("&#x1F6C8;");
-    this.driver.writeln(undefined, ...args);
+    this.log(...args);
   }
 
   error(...args: unknown[]) {
-    args.unshift("&#x1F6C8;");
     this.driver.writeln(
       {
-        color: "rgb(155, 44, 44)",
+        "background-color": "rgba(155, 44, 44, 0.5)",
+        color: "pink",
       },
       ...args
     );
-  }
-
-  dir(...args: unknown[]) {
-    args.forEach((arg) => {
-      if (typeof arg === "string") {
-        this.driver.write(undefined, arg, " ");
-        return;
-      }
-
-      if (typeof arg === "object") {
-        const formatted = JSON.stringify(arg, undefined, 2);
-        const lines = formatted.split("\n");
-        lines.forEach((line) => {
-          this.driver.writeln(undefined, line);
-        });
-
-        return;
-      }
-
-      throw new Error("console.dir unknown type: " + typeof arg);
-    });
   }
 
   clear() {
