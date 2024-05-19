@@ -1,0 +1,287 @@
+---
+title: "JavaScript: The Basics"
+description: "An introduction to the basics of JavaScript language"
+slug: "javascript-the-basics"
+created: "2024-05-19T20:15:38.000Z"
+tags:
+  - javascript
+---
+
+import JSSnippet from "../../components/JSSnippet.svelte"
+
+During my career as a JavaScript developer, I have seen many instances of
+mistakes being made due to a lack of knowledge about the language fundamentals.
+One such mistake is the impression that declaring an object as `const` will make
+it immutable: its shape and properties values cannot be changed. That is not the
+case! In fact, **in JavaScript, objects are the only mutable values**.
+
+This article attempts to clear out some of that confusion and, hopefully, provide
+you with a better understanding of the language.
+
+## JavaScript identifiers
+
+An **identifier** is a name that is given to language entities like
+**_variables_**, **_functions_**, **_classes_**, or **_properties_**.
+
+### What is a variable?
+
+A **variable** is a type of identifier which acts like a box that has a
+**_name_** and some content: a **_value_**. We can use the variable name to
+access or update its content whenever needed. If a variable is declared without
+a value (`let foo;`), it will be implicitly initialized with `undefined`.
+
+<JSSnippet client:load>
+```js
+let foo;
+console.log(foo);
+```
+</JSSnippet>
+
+### What is a function?
+
+A **function** is a "subprogram" that can be **_called_** by code external (or
+internal, in the case of recursion) to the function. Functions are composed of a
+sequence of statements called the **_function body_**, they can accept values
+**_passed_** as parameters, and they **_return_** a value. If no value is
+explicitly returned (the function's execution doesn't end at a `return`
+statement followed by an expression) then the function will return `undefined`.
+
+<JSSnippet client:load>
+```js
+function foo(a, b) {
+  return a + b; // returns an expression or value
+}
+
+function bar() {
+  return undefined; // explicitly returns 'undefined'
+}
+
+function baz() {
+  return; // no value is returned, will default to 'undefined'
+}
+
+function qux() {
+  // no return statement, will default to 'undefined'
+}
+
+console.log(foo(1, 2), bar(), baz(), qux());
+```
+</JSSnippet>
+
+In fact, functions are **objects** with the additional capability of being
+**_callable_**. We say that JavaScript has **_first-class functions_**
+because they can be passed to other functions, returned from functions, and
+assigned to variables and properties.
+
+<JSSnippet client:load>
+```js
+const foo = () => {
+  console.log("foobar");
+};
+foo(); // Invoke it using the variable
+```
+</JSSnippet>
+
+### What is a class?
+
+Generally speaking, a **class** is a template definition of an object. Think of
+it as a "blueprint" for creating objects in the same way that you can have a
+digital blueprint of a cup and then use a 3D printer to print it out.
+
+JavaScript introduced classes in ES6 (aka ES2015), with additional features
+added later (e.g. private class fields and methods were introduced in ES2022).
+
+Some ES5 enthusiasts would argue that classes are an unnecessary feature of the
+language because we already had all the tools needed to create objects, and
+because JavaScript uses **_prototype-based inheritance_** which happens at
+runtime, as opposed to classical inheritance which happens at compile time (in
+languages like C# or Java).
+
+An example of creating objects without a class is simply using a function
+instead.
+
+<JSSnippet client:load>
+```js
+function createCircle(r) {
+  // private
+  let radius = r;
+
+  // public
+  return {
+    getRadius: function() { return radius },
+    setRadius: function(r) { radius = r },
+    getArea: function() { return radius * radius * Math.PI },
+  }
+}
+
+const c = createCircle(1);
+console.log("A circle with radius", c.getRadius(), "has area of", c.getArea());
+c.setRadius(2);
+console.log("A circle with radius", c.getRadius(), "has area of", c.getArea());
+console.log(c.radius); // prints 'undefined' because radius is private
+```
+</JSSnippet>
+
+The example above is pretty similar to the **_Module Pattern_** with the
+difference that the latter is usually using an [Immediately Invoked Function
+Expression (IIFE)](https://developer.mozilla.org/en-US/docs/Glossary/IIFE).
+
+<JSSnippet client:load>
+```js
+const Module = (function () {
+  const privateVariable = "I am private variable";
+
+  function privateFunction() {
+    console.log("This is a private function");
+  }
+
+  function publicFunction() {
+    privateFunction();
+    console.log(privateVariable);
+  }
+
+  return {
+    // Public API
+    publicFunction: publicFunction,
+  };
+})(); // IIFE
+
+Module.publicFunction();
+```
+</JSSnippet>
+
+Another way to create objects without using a class is via **_constructor
+functions_**. Constructor functions are functions called with `new`.
+
+<JSSnippet client:load>
+```js
+// as a notation, constructor function names start with an upper-case letter
+function Circle(radius) {
+  // 'radius' is inside a closure so it is "private" to our function
+
+  // everything added to 'this' is public
+  this.getRadius = function() { return radius };
+  this.setRadius = function(r) { radius = r };
+  this.getArea = function() { return  radius * radius * Math.PI }
+}
+
+const c = new Circle(1);
+console.log("A circle with radius", c.getRadius(), "has area of", c.getArea());
+c.setRadius(2);
+console.log("A circle with radius", c.getRadius(), "has area of", c.getArea());
+console.log(c.radius); // prints 'undefined' because radius is private
+```
+</JSSnippet>
+
+One could argue that the implementation above is inefficient because we are
+creating the three methods every time we call the constructor. Instead, we
+should place them on the constructor's **_prototype_**. We could definitely do
+that, but there's a caveat. The prototype methods won't have access to our
+_**closure**_ so we will have to make `radius` public. If that is an acceptable
+solution then we can re-write our code as shown below.
+
+<JSSnippet client:load>
+```js
+// as a notation, constructor function names start with an upper-case letter
+function Circle(radius) {
+  this.radius = radius;
+}
+// we no longer need the setter and getter for 'radius'
+Circle.prototype.getArea = function() { return this.radius * this.radius * Math.PI };
+
+const c = new Circle(1);
+console.log("A circle with radius", c.radius, "has area of", c.getArea());
+c.radius = 2;
+console.log("A circle with radius", c.radius, "has area of", c.getArea());
+console.log(c.radius); // prints '2' because radius is now public
+```
+</JSSnippet>
+
+The code above is the equivalent of the following implementation using classes.
+
+<JSSnippet client:load>
+```js
+class Circle {
+  constructor(radius) {
+    this.radius = radius;
+  }
+
+  // Methods are created on Circle.prototype
+  getArea() {
+    return this.radius * this.radius * Math.PI
+  }
+}
+
+const c = new Circle(1);
+console.log("A circle with radius", c.radius, "has area of", c.getArea());
+c.radius = 2;
+console.log("A circle with radius", c.radius, "has area of", c.getArea());
+console.log(c.radius); // prints '2' because radius is now public
+```
+</JSSnippet>
+
+The "fun" part is that we can interchange the two approaches and we can mutate
+the prototype at runtime, even after an instance of the class has been created.
+
+<JSSnippet client:load>
+```js
+class Circle {
+  constructor(radius) {
+    this.radius = radius;
+  }
+
+  // Methods are created on Circle.prototype
+  getArea() {
+    return this.radius * this.radius * Math.PI
+  }
+}
+
+const c = new Circle(1);
+console.log("A circle with radius", c.radius, "has an area of", c.getArea());
+c.radius = 2;
+console.log("A circle with radius", c.radius, "has an area of", c.getArea());
+
+// no more pie
+Circle.prototype.getArea = function() { return this.radius * this.radius };
+console.log("Am I now a square with an area of", c.getArea(), "?");
+```
+</JSSnippet>
+
+## The scope
+
+The scope is the region of the codebase where an identifier is valid (visible).
+In JavaScript, there are four **scopes** which determine the visibility of an
+identifier:
+
+1. Global - visible by everything
+2. Module - visible within a module
+3. Function - visible within a function (and its sub-functions and blocks)
+4. Block - visible within a block (and its sub-blocks)
+
+The scope of a identifier depends on three factors:
+
+1. How the identifier has been declared
+2. Where the identifier has been declared
+3. Whether the code is running in [strict
+  mode](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode)
+  or [non-strict
+  mode](https://developer.mozilla.org/en-US/docs/Glossary/Sloppy_mode)
+
+Whenever an identifier is accessed, JavaScript will search for a match from the
+inner-most scope towards the outer-most scope (global scope). If no match is
+found, a `ReferenceError` will be thrown.
+
+<JSSnippet client:load>
+```js
+const foo = 42; // global scope
+function f() {
+  const bar = "bar"; // function scope
+  {
+    const baz = true; // block scope
+    console.log(foo, bar, baz);
+    console.log(nope); // ReferenceError: nope is not defined
+  }
+}
+f();
+```
+</JSSnippet>
