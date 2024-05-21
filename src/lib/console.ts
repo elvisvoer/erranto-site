@@ -9,12 +9,12 @@ function getColor(data: unknown) {
   switch (true) {
     case data === undefined:
     case data === null:
-      return "gray";
+      return "lightgray";
     case typeof data === "number":
     case typeof data === "boolean":
-      return "green";
+      return "lightgreen";
     case Object.getPrototypeOf(data) === Error.prototype:
-      return "pink";
+      return "lightpink";
     default:
       return "inherit";
   }
