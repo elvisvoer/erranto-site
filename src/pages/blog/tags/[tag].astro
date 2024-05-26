@@ -28,10 +28,10 @@ const { tag } = Astro.params;
 const { posts } = Astro.props;
 ---
 
-<Layout pageTitle={`Posts tagged with #${tag}`}>
+<Layout pageTitle={`Blog posts tagged with #${tag}`}>
   <div class="mb-10">
     <h2 class="text-3xl font-semibold dark:text-white">
-      Posts tagged with #{tag}
+      Blog posts tagged with #{tag}
     </h2>
   </div>
   <PostsList posts={posts} />
