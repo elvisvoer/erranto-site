@@ -1,0 +1,408 @@
+---
+title: "JavaScript hoisting and IE polyfills"
+description: "A story about how JavaScript hoisting made IE polyfills be applied in all browsers"
+slug: "javascript-hoisting-and-ie-polyfills"
+created: "2024-10-05T15:42:09.000Z"
+tags:
+  - javascript
+  - hoisting
+  - mouse-event
+  - polyfill
+---
+
+import JSSnippet from "../../components/JSSnippet.svelte"
+
+It has been a very long time since I last had to deal with hoisting in
+JavaScript. If my memory serves me correctly, it had something to do with [using
+ES module imports in
+Jest](https://jestjs.io/docs/manual-mocks#using-with-es-module-imports). Oh
+man... I have never enjoyed using Jest. It always felt like I needed to fight it
+to get it to do what I want. Or maybe it was just "skill issue".
+
+Fast forward to a few weeks ago, and voilà — JavaScript hoisting strikes again.
+This time, it had to do with Internet Explorer (IE)
+[polyfills](https://developer.mozilla.org/en-US/docs/Glossary/Polyfill). Yep, IE
+— that old thing that made our lives as web developers a little bit more
+"_colorful_". If you ever had to write code to support it, I bet you remember
+having to include a gazillion polyfills just to make it behave like the rest of
+the browsers.
+
+Luckily for us, [Microsoft ended support for IE 11 on June 25,
+2022](https://learn.microsoft.com/en-us/lifecycle/announcements/internet-explorer-11-end-of-support),
+and has encouraged its users to move to the Chromium-based Microsoft Edge. This
+means we no longer needed to include the polyfills, and we could, therefore,
+remove a couple of hundred lines of code from our bundle. Easy peasy — except
+our Cypress tests running on Chrome started to fail. Whoot?? How does removing
+IE polyfills make Chrome tests fail? The short answer...
+
+<img style="margin: 0 auto; max-width: 95%;"
+  src="https://i.imgflip.com/940vzu.jpg" alt="Ancient aliens meme depicting
+  JavaScript" />
+
+For the long answer, we will have to dive into how the scope works in
+JavaScript, what is hoisting, and how the polyfill detection phase was
+implemented. So let's get started.
+
+## JavaScript scope and hoisting
+
+Most of the bad reputation that the language gets is coming from the way the
+scope was implemented and how hard it is to rationalize about the value of the
+`this` reference. Up until the introduction of the array functions, it was very
+common to see code like `var that = this;` or `var self = this`. Anyway, it will
+take too much space to cover the quirks of the `this` keyword here, so I will
+only focus on simple variables and functions.
+
+Traditionally, variable declaration was done using the `var` keyword. If a
+variable is declared but not initialized, it will by default have an `undefined`
+value.
+
+<JSSnippet client:load>
+```js
+var name = "Moo";
+var uninitialized;
+
+console.log(name);
+console.log(uninitialized);
+```
+</JSSnippet>
+
+So far, so good. We have created two variables and printed their values. The
+`name` variable was given an initial value, while we left the `uninitialized`
+variable, well... uninitialized. Things start to make less sense when you
+encounter code similar to the one below.
+
+<JSSnippet client:only="svelte" showLineNumbers={true}>
+```js
+function fun(cond) {
+  if (cond) {
+    var someValue = "some-value";
+  }
+
+  console.log(someValue);
+}
+
+fun(true);
+fun(false);
+```
+</JSSnippet>
+
+In a sane programming language, you'd expect line 6 to throw an error like
+`ReferenceError: someValue is not defined`. Not in JavaScript, though! Before
+the introduction of `let` and `const`, a variable would belong to one of two
+scopes:
+
+- _function scope_, if the variable was declared inside a function;
+- _global scope_, if the variable was declared outside of a function.
+
+In the scenario above, `someValue` is visible throughout the function scope even
+though it was declared inside an `if` block. This is what we refer to as
+**_hoisting_**: a variable declared with `var` is visible from the beginning of
+its scope regardless of the position in code where it was declared. 
+
+To make things worse, if you by mistake omit the `var` keyword (e.g. you
+misspell the variable name), you will create a global variable.
+
+<JSSnippet client:only="svelte" showLineNumbers={true}>
+```js
+function fun(cond) {
+  var someValue;
+
+  if (cond) {
+    somValue = "some-value"; // misspelled
+  }
+
+  console.log(someValue);
+}
+
+fun(true); // creates global variable 'somValue'
+fun(false);
+
+console.log(somValue); // misspelled again, prints 'some-value'
+```
+</JSSnippet>
+
+### Strict mode
+
+One way to prevent such mistakes is to use [strict
+mode](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode).
+In strict mode, line 7 throws `ReferenceError: assignment to undeclared variable
+somValue`:
+
+<JSSnippet client:only="svelte" showLineNumbers={true}>
+```js
+"use strict";
+
+function fun(cond) {
+  var someValue;
+
+  if (cond) {
+    somValue = "some-value"; // misspelled, but throws an error
+  }
+
+  console.log(someValue);
+}
+
+fun(true);
+fun(false);
+
+console.log(somValue);
+```
+</JSSnippet>
+
+While I recommend to always use strict mode, it does not help us with hoisting
+issues. Take the following code as an example: `someValue` is still hoisted, and
+line 4 will simply print `undefined` instead of throwing an error.
+
+<JSSnippet client:only="svelte" showLineNumbers={true}>
+```js
+"use strict";
+
+function fun() {
+  console.log(someValue);
+
+  {
+    var someValue = "some-value"; // variable is declared inside a block
+  }
+
+  console.log(someValue);
+}
+
+fun();
+```
+</JSSnippet>
+
+### Let and const
+
+To fix the issues that come from using the var keyword, JavaScript introduced
+two ways of declaring block-scoped variables: `let` and `const`. `let` is used
+when we want to reassign the variable later, while `const` is used when we never
+need to reassign it. Keep in mind that `const` only prevents reassignment; it
+**does not** make the variable immutable.
+
+<JSSnippet client:only="svelte">
+```js
+const person = {
+  name: "Moo"
+}
+
+person.name = "Foo"; // mutates the name property of our object
+
+console.log(JSON.stringify(person, undefined, 2));
+
+```
+</JSSnippet>
+
+Let's return to our previous example and see if `const` will make our code more
+predictable.
+
+<JSSnippet client:only="svelte">
+```js
+function fun() {
+  // throws `ReferenceError: someValue is not defined` because `someValue` is only visible within its block
+  console.log(someValue);
+
+  { // `someValue` is only visible inside this block
+    const someValue = "some-value";
+  }
+
+  console.log(someValue);
+}
+
+fun();
+```
+</JSSnippet>
+
+What about hoisting, is that also fixed? Oh well, line 3 finally throws an error!
+
+<JSSnippet client:only="svelte" showLineNumbers={true}>
+```js
+function fun() {
+  // throws `ReferenceError: can't access lexical declaration 'someValue' before initialization`
+  console.log(someValue);
+
+  const someValue = "some-value";
+
+  console.log(someValue);
+}
+
+fun();
+```
+</JSSnippet>
+
+With `let` and `const` we are in a much better place: variables
+are only visible in the block where they were declared, and we receive an error
+if we try to access a variable before its declaration.
+
+## The MouseEvent polyfill
+
+Now that we have seen some of the quirks of JavaScript, we can return to our
+main story. Back when the team had to support IE, they ran into the typical API
+differences that required the use of a polyfill. In this case, it was the
+`MouseEvent` polyfill, as can be seen on this
+[StackOverflow](https://stackoverflow.com/questions/28815845/mouseevent-not-working-in-internet-explorer)
+page. [One of the answers](https://stackoverflow.com/a/43640602/3415496) there
+suggest that there is already a polyfill available on Mozilla Developer Network
+(MDN), "except that the try catch block in that code needs to look like this":
+
+```javascript
+try {
+  new CustomEvent('test');
+  return false; // No need to polyfill
+} catch (e) {
+  // Need to polyfill - fall through
+}
+```
+
+The polyfill has been removed from the main MDN website, but I managed to find
+it in [a GitHub
+repository](https://github.com/msn0/mdn-polyfills/blob/master/src/MouseEvent/MouseEvent.js),
+and it looks **almost** identical to the one we were using:
+
+```javascript
+export default function () {
+    try {
+        new MouseEvent('test');
+        return false; // No need to polyfill
+    } catch (e) {
+        // Need to polyfill - fall through
+    }
+
+    // Polyfills DOM4 MouseEvent
+    var MouseEvent = function (eventType, params) {
+        params = params || { bubbles: false, cancelable: false };
+        var mouseEvent = document.createEvent('MouseEvent');
+        mouseEvent.initMouseEvent(eventType,
+            params.bubbles,
+            params.cancelable,
+            window,
+            0,
+            params.screenX || 0,
+            params.screenY || 0,
+            params.clientX || 0,
+            params.clientY || 0,
+            params.ctrlKey || false,
+            params.altKey || false,
+            params.shiftKey || false,
+            params.metaKey || false,
+            params.button || 0,
+            params.relatedTarget || null
+        );
+
+        return mouseEvent;
+    };
+
+    MouseEvent.prototype = Event.prototype;
+
+    window.MouseEvent = MouseEvent;
+}
+```
+
+At first glance, the code looks correct, although, as one of my colleagues
+pointed out, "the `try/catch` block is trying to be a little too smart." And he
+was absolutely right. If we learned anything from the previous section, it's
+that a variable declared with var will be hoisted to the beginning of the
+function. Let's add a console log in the `catch` block and see what error we get.
+
+<JSSnippet client:only="svelte" showLineNumbers={true}>
+```js
+function fun() {
+    try {
+        new MouseEvent('test');
+        return false; // No need to polyfill
+    } catch (e) {
+        console.log(e);
+        // Need to polyfill - fall through
+    }
+
+    // Polyfills DOM4 MouseEvent
+    var MouseEvent = function (eventType, params) {
+        params = params || { bubbles: false, cancelable: false };
+        var mouseEvent = document.createEvent('MouseEvent');
+        mouseEvent.initMouseEvent(eventType,
+            params.bubbles,
+            params.cancelable,
+            window,
+            0,
+            params.screenX || 0,
+            params.screenY || 0,
+            params.clientX || 0,
+            params.clientY || 0,
+            params.ctrlKey || false,
+            params.altKey || false,
+            params.shiftKey || false,
+            params.metaKey || false,
+            params.button || 0,
+            params.relatedTarget || null
+        );
+
+        return mouseEvent;
+    };
+
+    MouseEvent.prototype = Event.prototype;
+
+    window.MouseEvent = MouseEvent;
+}
+
+fun();
+```
+</JSSnippet>
+
+`TypeError: MouseEvent is not a constructor` — there we have it! The new
+implementation for the `MouseEvent` will hoist, and line 3 will call `new` on an
+`undefined` value, instead of a constructor. This meant that the polyfill was
+always applied, regardless of the browser used. The version of the polyfill that
+I linked earlier uses a different name for the polyfill implementation
+(`MouseEventPolyfill`), so the name collision due to hoisting won't happen.
+
+<JSSnippet client:only="svelte">
+```js
+function fun() {
+    try {
+        new MouseEvent('test');
+        console.log('No need to apply the polyfill');
+        return false; // No need to polyfill
+    } catch (e) {
+        console.log(e);
+        // Need to polyfill - fall through
+    }
+
+    // Polyfills DOM4 MouseEvent
+    var MouseEventPolyfill = function (eventType, params) {
+        params = params || { bubbles: false, cancelable: false };
+        var mouseEvent = document.createEvent('MouseEvent');
+        mouseEvent.initMouseEvent(eventType,
+            params.bubbles,
+            params.cancelable,
+            window,
+            0,
+            params.screenX || 0,
+            params.screenY || 0,
+            params.clientX || 0,
+            params.clientY || 0,
+            params.ctrlKey || false,
+            params.altKey || false,
+            params.shiftKey || false,
+            params.metaKey || false,
+            params.button || 0,
+            params.relatedTarget || null
+        );
+
+        return mouseEvent;
+    };
+
+    MouseEventPolyfill.prototype = Event.prototype;
+
+    window.MouseEvent = MouseEventPolyfill;
+}
+
+fun();
+```
+</JSSnippet>
+
+Once we realized that our polyfill was always applied and that our tests were
+relying on its API, we reworked the tests using the Cypress `trigger` API, and we
+were happy again.
+
+It had been ages since I last dealt with a bug caused by hoisting, and this
+incident reminded me of the old days of working with JavaScript. I'm glad we've
+come such a long way since then.
