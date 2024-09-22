@@ -3,9 +3,14 @@
   import { VirtualConsole, HTMLConsoleDriver } from "../lib/console";
   import { evalSafe } from "../lib/javascript";
 
+  export let showLineNumbers = false;
+
   let data;
   let jsConsole;
   let jsConsoleRef;
+
+  // slice(0, -1) to exclude last item in the array which is a newline
+  $: lineNumbers = (data && data.outerText.split("\n").slice(0, -1).map((_, i) => i + 1)) || [];
 
   onMount(() => {
     jsConsole = new VirtualConsole(new HTMLConsoleDriver(jsConsoleRef));
@@ -28,7 +33,14 @@
 </script>
 
 <div class="w-full flex flex-col gap-4">
-  <div class="code-wrapper" bind:this={data}><slot /></div>
+  <div class="code-wrapper">
+    {#if showLineNumbers}
+      <div class="line-num">
+        <pre>{#each lineNumbers as line}{`${line}\n`}{/each}</pre>
+      </div>
+    {/if}
+    <div class="code" bind:this={data}><slot /></div>
+  </div>
 
   <button
     type="button"
@@ -43,6 +55,34 @@
 <style>
   .code-wrapper :global(pre) {
     margin: 0px;
+  }
+
+  .code-wrapper {
+    width: 100%;
+    display: flex;
+    border-radius: 0.375rem;
+    overflow: hidden;
+  }
+
+  .code-wrapper pre {
+    margin: 0;
+    padding: 1rem 0.2rem;
+    border-radius: 0;
+  }
+
+  .code-wrapper .line-num pre {
+    background-color: inherit;
+    text-align: right;
+  }
+
+  .code-wrapper .code {
+    background-color: #24292e;
+    flex-grow: 1;
+    overflow: scroll;
+  }
+
+  .code-wrapper .code > pre {
+    padding: 1rem 1.5rem;
   }
 
   .js-console {
