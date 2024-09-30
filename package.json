@@ -21,7 +21,7 @@
     "@popperjs/core": "^2.11.8",
     "astro": "^4.15.9",
     "flowbite": "^2.5.1",
-    "flowbite-typography": "^1.0.3",
+    "flowbite-typography": "^1.0.4",
     "markdown-it": "^14.1.0",
     "sanitize-html": "^2.13.0",
     "svelte": "^4.2.19",
