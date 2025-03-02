@@ -1,0 +1,145 @@
+---
+title: "The try/catch/maybe story"
+description: "There is no guarantee for the execution if the finally block in async code"
+slug: "try-catch-maybe"
+created: "2025-03-02T16:55:09.000Z"
+tags:
+  - javascript
+  - async/await
+  - promises
+  - try/catch/finally
+---
+
+import JSSnippet from "../../components/JSSnippet.svelte"
+
+When we lean about exception handling, and the `try/catch/finally` statements, we are
+told that the `finally` block is guaranteed to always execute. Here is an example:
+
+<JSSnippet client:load>
+```js
+function doSomething() {
+
+}
+
+try {
+  doSomething();
+  console.log("Done!");
+  return 42;
+} catch (e) {
+  console.error("Got error:", e);
+} finally {
+  console.log("Finally!");
+}
+```
+</JSSnippet>
+
+The code above will successfully execute `doSomething` (the function doesn't do anything
+at the moment), it will print `Done`, and then, even though there is a `return` statement,
+it will print `Finally!`.
+
+Let's see what happens if we throw an exception inside `doSomething`:
+
+<JSSnippet client:load>
+```js
+function doSomething() {
+  throw new Error("Nope!");
+}
+
+try {
+  doSomething();
+  console.log("Done!");
+  return 42;
+} catch (e) {
+  console.error("Got error:", e);
+} finally {
+  console.log("Finally!");
+}
+```
+</JSSnippet>
+
+As expected, the exception being thrown will interrupt the execution of the
+`try` block, triggering the `catch` block, which will print `Got error: Error: Nope!`.
+After that, the `finally` block will execute, printing `Finally!`.
+
+---
+
+For synchronous code the `finally` guarantee holds true. The question is, will it also
+hold true for async code? Technically yes, but with a caveat. The promise that is being
+awaited needs to be resolved or rejected before the rest of the code can execute.
+
+Let's return to our code examples and this time use async code.
+
+<JSSnippet client:load>
+```js
+async function doSomething() {
+  return Promise.resolve();
+}
+
+try {
+  await doSomething();
+  console.log("Done!");
+  return 42;
+} catch (e) {
+  console.error("Got error:", e);
+} finally {
+  console.log("Finally!");
+}
+```
+</JSSnippet>
+
+Just like in our first example, `doSomething` will successfully resolve with
+`undefined`, after which the rest of the code will execute, printing `Done!`
+followed by `Finally!`.
+
+If we reject from `doSomething` the result will be similar with the second sync
+code example:
+
+<JSSnippet client:load>
+```js
+async function doSomething() {
+  return Promise.reject(new Error("Nope"));
+}
+
+try {
+  await doSomething();
+  console.log("Done!");
+  return 42;
+} catch (e) {
+  console.error("Got error:", e);
+} finally {
+  console.log("Finally!");
+}
+```
+</JSSnippet>
+
+In both our examples, the promise has settled, which allowed the execution of
+the rest of the code to continue. However, in the recent months, I have stumbled
+upon a situation where the promise never settled. We nicknamed that bug the
+`try/catch/maybe` bug. Here is how it looks like.
+
+<JSSnippet client:load>
+```js
+const someCondition = false; 
+async function doSomething() {
+  return new Promise(resolve => {
+    if (someCondition) {
+      resolve(); // never resolves because our condition is `false`
+    }
+  });
+}
+
+try {
+  await doSomething();
+  console.log("Done!");
+  return 42;
+} catch (e) {
+  console.error("Got error:", e);
+} finally {
+  console.log("Finally!");
+}
+```
+</JSSnippet>
+
+It's not rocket science, but it took us a little bit of debugging until
+we realized that we are not resolving our promises. That's why I advice to be careful
+when using conditionals in the `new Promise` constructor handler.
