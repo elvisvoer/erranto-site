@@ -20,6 +20,7 @@ export default defineConfig({
   integrations: [mdx(), tailwind(), svelte(), sitemap(), clerk()],
   trailingSlash: "never",
   adapter: vercel(),
+  output: "server",
   env: {
     schema: {
       PUBLIC_CLERK_PUBLISHABLE_KEY: envField.string({
