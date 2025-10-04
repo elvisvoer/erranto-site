@@ -5,7 +5,7 @@ import svelte from "@astrojs/svelte";
 import sitemap from "@astrojs/sitemap";
 // import db from "@astrojs/db";
 import vercel from "@astrojs/vercel";
-import clerk from '@clerk/astro'
+import clerk from "@clerk/astro";
 const DEV_PORT = 2121;
 
 // https://astro.build/config
@@ -22,8 +22,14 @@ export default defineConfig({
   adapter: vercel(),
   env: {
     schema: {
-      PUBLIC_CLERK_PUBLISHABLE_KEY: envField.string({ context: "server", access: "public" }),
-      CLERK_SECRET_KEY: envField.string({ context: "server", access: "secret" }),
-    }
-  }
+      PUBLIC_CLERK_PUBLISHABLE_KEY: envField.string({
+        context: "server",
+        access: "public",
+      }),
+      CLERK_SECRET_KEY: envField.string({
+        context: "server",
+        access: "secret",
+      }),
+    },
+  },
 });
