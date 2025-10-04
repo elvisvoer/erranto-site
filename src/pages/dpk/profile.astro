@@ -1,0 +1,10 @@
+---
+import Layout from "../../layout/default.astro";
+const user = await Astro.locals.currentUser();
+---
+
+<Layout pageTitle="Profile">
+  <h1 class="text-xl my-8 text-center font-light dark:text-gray-300">
+    {user?.fullName}
+  </h1>
+</Layout>

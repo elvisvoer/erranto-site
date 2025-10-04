@@ -3,9 +3,12 @@ import { SignedIn, UserButton } from "@clerk/astro/components";
 const user = await Astro.locals.currentUser();
 ---
 
-<nav style="background-color: #004a00;" class="absolute bottom-0 mx-auto w-full max-w-screen-sm">
+<nav
+  style="background-color: #004a00;"
+  class="absolute bottom-0 mx-auto w-full max-w-screen-sm"
+>
   <div class="flex w-full p-3 justify-between text-white">
-    <button class="inline-flex flex-col justify-center align-middle">
+    <a class="inline-flex flex-col justify-center align-middle">
       <svg
         class="m-auto"
         fill="#ffffff"
@@ -27,11 +30,9 @@ const user = await Astro.locals.currentUser();
         </g></svg
       >
       <span class="inline-block text-sm">Challenge</span>
-    </button>
+    </a>
 
-    <button
-      class="inline-flex flex-col justify-center align-middle"
-    >
+    <a class="inline-flex flex-col justify-center align-middle">
       <svg
         class="m-auto"
         fill="#ffffff"
@@ -47,11 +48,9 @@ const user = await Astro.locals.currentUser();
         </g></svg
       >
       <span class="inline-block text-sm">Pyramid</span>
-    </button>
+    </a>
 
-    <button
-      class="inline-flex flex-col justify-center align-middle"
-    >
+    <a class="inline-flex flex-col justify-center align-middle">
       <svg
         class="m-auto"
         fill="#ffffff"
@@ -78,17 +77,15 @@ const user = await Astro.locals.currentUser();
         </g></svg
       >
       <span class="inline-block text-sm">Rules</span>
-    </button>
+    </a>
 
-    <button
-      class="inline-flex flex-col justify-center align-middle"
-    >
+    <a href="/dpk/profile" class="inline-flex flex-col justify-center align-middle">
       <img
         class="inline-block h-10 w-10 rounded-full object-cover object-center m-auto"
         src={user?.imageUrl}
         alt="profile-picture"
       />
       <span class="inline-block text-sm">Profile</span>
-    </button>
+    </a>
   </div>
 </nav>
