@@ -3,6 +3,7 @@ import mdx from "@astrojs/mdx";
 import tailwind from "@astrojs/tailwind";
 import svelte from "@astrojs/svelte";
 import sitemap from "@astrojs/sitemap";
+import db from "@astrojs/db";
 const DEV_PORT = 2121;
 
 // https://astro.build/config
@@ -12,6 +13,6 @@ export default defineConfig({
     /* Dev. server only */
     port: DEV_PORT,
   },
-  integrations: [mdx(), tailwind(), svelte(), sitemap()],
+  integrations: [mdx(), tailwind(), svelte(), sitemap(), db()],
   trailingSlash: "never",
 });
