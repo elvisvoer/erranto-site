@@ -3,7 +3,7 @@ import mdx from "@astrojs/mdx";
 import tailwind from "@astrojs/tailwind";
 import svelte from "@astrojs/svelte";
 import sitemap from "@astrojs/sitemap";
-// import db from "@astrojs/db";
+import db from "@astrojs/db";
 import vercel from "@astrojs/vercel";
 import clerk from "@clerk/astro";
 const DEV_PORT = 2121;
@@ -17,7 +17,7 @@ export default defineConfig({
     port: DEV_PORT,
   },
 
-  integrations: [mdx(), tailwind(), svelte(), sitemap(), clerk()],
+  integrations: [mdx(), tailwind(), svelte(), sitemap(), clerk(), db()],
   trailingSlash: "never",
   adapter: vercel(),
   output: "server",
@@ -31,6 +31,10 @@ export default defineConfig({
         context: "server",
         access: "secret",
       }),
+      DPK_ADMIN_EMAIL: envField.string({
+        context: "server",
+        access: "secret"
+      })
     },
   },
 });

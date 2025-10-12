@@ -1,15 +1,15 @@
 ---
 import Layout from "../layout/default.astro";
-import { SignedOut, SignInButton } from "@clerk/astro/components";
+import { SignedIn, SignOutButton } from "@clerk/astro/components";
 ---
 
-<Layout pageTitle="DPK League">
-  <h1 class="text-xl my-8 text-center font-light dark:text-gray-300">
-    DPK League
-  </h1>
-  <SignedOut>
-    <SignInButton
+<Layout pageTitle="Profile">
+  <h2 class="text-xl my-12 text-center font-nomral dark:text-gray-300">
+    Please contact one of the DPK admins to activate your account.
+  </h2>
+  <SignedIn>
+    <SignOutButton
       class:list={"w-5/6 mx-auto text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"}
     />
-  </SignedOut>
+  </SignedIn>
 </Layout>
