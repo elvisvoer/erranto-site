@@ -1,0 +1,160 @@
+---
+import Layout from "../../../layout/default.astro";
+import { db, eq, Player } from "astro:db";
+const { id } = Astro.params;
+
+const players = await db.select().from(Player).orderBy(Player.tier);
+const res = await db.select().from(Player).where(eq(Player.id, id!));
+let currentPlayer = res[0];
+
+if (Astro.request.method === "POST") {
+  try {
+    const data = await Astro.request.formData();
+
+    await db
+      .update(Player)
+      .set({
+        active: !!data.get("active"),
+        admin: !!data.get("admin"),
+        handicap: +(data.get("handicap") ?? 3),
+        tier: +(data.get("tier") ?? 3),
+      })
+      .where(eq(Player.id, id!));
+
+    return Astro.redirect("/admin/player");
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+  }
+}
+---
+
+<Layout pageTitle="Users">
+  <h1 class="text-xl my-8 text-center font-light dark:text-gray-300">
+    Players
+  </h1>
+  <form method="POST">
+    <table
+      class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+    >
+      <thead
+        class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+      >
+        <tr>
+          <th scope="col" class="px-4 py-3">Name</th>
+          <th scope="col" class="px-4 py-3">Handicap</th>
+          <th scope="col" class="px-4 py-3">Tier</th>
+          <th scope="col" class="px-4 py-3">Active</th>
+          <th scope="col" class="px-4 py-3">Admin</th>
+          <th scope="col" class="px-4 py-3"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          players.map((player) => {
+            if (player.id === currentPlayer.id) {
+              return (
+                <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200">
+                  <th
+                    scope="row"
+                    class="px-4 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                  >
+                    {currentPlayer.name}
+                  </th>
+                  <td class="px-4 py-4">
+                    <select
+                      name="handicap"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    >
+                      {[1, 2, 3].map((o) => (
+                        <option
+                          value={o}
+                          selected={o === currentPlayer.handicap}
+                        >
+                          {o}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
+                  <td class="px-4 py-4">
+                    <select
+                      name="tier"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    >
+                      {[1, 2, 3, 4, 5, 6, 7, 8].map((o) => (
+                        <option value={o} selected={o === currentPlayer.tier}>
+                          {o}
+                        </option>
+                      ))}
+                    </select>
+                    <td class="px-4 py-4">
+                      <input
+                        checked={currentPlayer.active}
+                        name="active"
+                        type="checkbox"
+                        value="active"
+                        class="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                      />
+                    </td>
+                    <td class="px-4 py-4">
+                      <input
+                        checked={currentPlayer.admin}
+                        name="admin"
+                        type="checkbox"
+                        value="admin"
+                        class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                      />
+                    </td>
+                    <td class="px-4 py-4">
+                      <button class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                        Update
+                      </button>
+                    </td>
+                  </td>
+                </tr>
+              );
+            } else {
+              return (
+                <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200">
+                  <th
+                    scope="row"
+                    class="px-4 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                  >
+                    {player.name}
+                  </th>
+                  <td class="px-4 py-4">{player.handicap}</td>
+                  <td class="px-4 py-4">{player.tier}</td>
+                  <td class="px-4 py-4">
+                    <input
+                      checked={player.active}
+                      disabled
+                      type="checkbox"
+                      class="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                    />
+                  </td>
+                  <td class="px-4 py-4">
+                    <input
+                      checked={player.admin}
+                      disabled
+                      type="checkbox"
+                      class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                    />
+                  </td>
+                  <td class="px-4 py-4">
+                    <a
+                      href={`/admin/player/${player.id}`}
+                      class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                    >
+                      Edit
+                    </a>
+                  </td>
+                </tr>
+              );
+            }
+          })
+        }
+      </tbody>
+    </table>
+  </form>
+</Layout>
