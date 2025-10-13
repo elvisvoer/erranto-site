@@ -1,10 +1,11 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/astro/server";
-import type { MiddlewareHandler } from 'astro';
+import type { MiddlewareHandler } from "astro";
 import { sequence } from "astro:middleware";
 import { DPK_ADMIN_EMAIL } from "astro:env/server";
 import { db, eq, Player } from "astro:db";
 
-const isProtectedRoute = createRouteMatcher(["/dkp(.*)"]);
+const isProtectedRoute = createRouteMatcher(["/dkp(.*)", "/admin(.*)"]);
+const isAdminRoute = createRouteMatcher(["/admin(.*)"]);
 
 const authMiddleware = clerkMiddleware((auth, context) => {
   const { isAuthenticated, redirectToSignIn, userId } = auth();
@@ -14,7 +15,7 @@ const authMiddleware = clerkMiddleware((auth, context) => {
   }
 });
 
-const playerMiddleware: MiddlewareHandler = async function(context, next) {
+const playerMiddleware: MiddlewareHandler = async function (context, next) {
   const user = await context.locals.currentUser();
 
   if (user?.id) {
@@ -42,6 +43,20 @@ const playerMiddleware: MiddlewareHandler = async function(context, next) {
   }
 
   return next();
-}
+};
 
-export const onRequest = sequence(authMiddleware, playerMiddleware);
+const adminMiddleware: MiddlewareHandler = async function (context, next) {
+  const player = context.locals.player;
+
+  if (!player?.admin && isAdminRoute(context.request)) {
+    return next("/404");
+  }
+
+  return next();
+};
+
+export const onRequest = sequence(
+  authMiddleware,
+  playerMiddleware,
+  adminMiddleware
+);
