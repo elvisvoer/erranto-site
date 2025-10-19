@@ -1,0 +1,133 @@
+---
+import Layout from "../../../layout/default.astro";
+import { db, Player, Match, MatchStats } from "astro:db";
+import { v4 as uuidv4 } from "uuid";
+
+const players = await db.select().from(Player).orderBy(Player.tier);
+let errorText: string | null = null;
+
+if (Astro.request.method === "POST") {
+  try {
+    const data = await Astro.request.formData();
+    const matchId = data.get("matchId") as string;
+    const player1 = data.get("player1") as string;
+    const player2 = data.get("player2") as string;
+
+    const [p1Id, p1H, p1T] = player1.split(",");
+    const [p2Id, p2H, p2T] = player2.split(",");
+
+    const p1Handicap = parseInt(p1H);
+    const p2Handicap = parseInt(p2H);
+    const minHandicap = Math.min(p1Handicap, p2Handicap);
+
+    const p1Tier = parseInt(p1T);
+    const p2Tier = parseInt(p2T);
+
+    const p1Frames = (p1Handicap - minHandicap) * 3;
+    const p2Frames = (p2Handicap - minHandicap) * 3;
+
+    if (p1Id === p2Id) {
+      errorText = "You must select two distinct players.";
+    } else if (Math.abs(p1Tier - p2Tier) !== 1) {
+      errorText = "Players need to be on adjacent tiers to be able to play.";
+    } else {
+      await db.insert(Match).values({
+        id: matchId,
+      });
+      await db.insert(MatchStats).values({
+        matchId: matchId,
+        playerId: p1Id,
+        framesWon: p1Frames,
+      });
+      await db.insert(MatchStats).values({
+        matchId: matchId,
+        playerId: p2Id,
+        framesWon: p2Frames,
+      });
+
+      return Astro.redirect("/admin/match");
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+  }
+}
+---
+
+<Layout pageTitle="New Match">
+  <h1 class="text-xl my-8 text-center font-light dark:text-gray-300">
+    New Match
+  </h1>
+
+  <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <form method="POST">
+      <input type="hidden" name="matchId" value={uuidv4()} />
+      <table
+        class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+      >
+        <thead
+          class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+        >
+          <tr>
+            <th scope="col" class="py-3">Players</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200"
+          >
+            <td
+              scope="row"
+              class="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+            >
+              <select
+                name="player1"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              >
+                {
+                  players.map((p) => (
+                    <option value={`${p.id},${p.handicap},${p.tier}`}>
+                      {p.name} [Tier: {p.tier}, Handicap: {p.handicap}]
+                    </option>
+                  ))
+                }
+              </select>
+            </td></tr
+          >
+          <tr
+            class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200"
+          >
+            <td
+              scope="row"
+              class="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+            >
+              <select
+                name="player2"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              >
+                {
+                  players.map((p) => (
+                    <option value={`${p.id},${p.handicap},${p.tier}`}>
+                      {p.name} [Tier: {p.tier}, Handicap: {p.handicap}]
+                    </option>
+                  ))
+                }
+              </select>
+            </td></tr
+          >
+          <tr>
+            <td class="p-4 text-right">
+              <button
+                class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+              >
+                Create
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </form>
+  </div>
+  <div class="m-4 text-red-700">{errorText}</div>
+</Layout>

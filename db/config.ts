@@ -1,4 +1,4 @@
-import { defineDb, defineTable, column } from "astro:db";
+import { defineDb, defineTable, column, NOW } from "astro:db";
 
 const Player = defineTable({
   columns: {
@@ -23,24 +23,19 @@ const Match = defineTable({
       enum: ["pending", "active", "finished"],
       default: "pending",
     }),
+    createdAt: column.date({ default: NOW }),
   },
 });
 
 const MatchStats = defineTable({
   columns: {
     matchId: column.text(),
-    playerId: column.text(),
-    framesWon: column.number()
+    playerId: column.text({ references: () => Player.columns.id }),
+    framesWon: column.number(),
   },
-  foreignKeys: [
-    {
-      columns: ["matchId", "playerId"],
-      references: () => [Match.columns.id, Player.columns.id],
-    },
-  ],
 });
 
 // https://astro.build/db/config
 export default defineDb({
-  tables: { Player },
+  tables: { Player, Match, MatchStats },
 });

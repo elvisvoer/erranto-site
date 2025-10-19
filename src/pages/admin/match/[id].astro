@@ -1,0 +1,219 @@
+---
+import Layout from "../../../layout/default.astro";
+import { db, Player, Match, MatchStats, eq, and } from "astro:db";
+
+const { id } = Astro.params;
+
+const rows = await db
+  .select()
+  .from(Match)
+  .innerJoin(MatchStats, eq(Match.id, MatchStats.matchId))
+  .innerJoin(Player, eq(MatchStats.playerId, Player.id));
+
+const result = rows.reduce((acc: any, { Match, MatchStats, Player }) => {
+  if (!acc[Match.id]) {
+    acc[Match.id] = {
+      ...Match,
+      players: [],
+    };
+  }
+  acc[Match.id].players.push({ ...Player, frames: MatchStats.framesWon });
+
+  return acc;
+}, {});
+
+if (Astro.request.method === "POST") {
+  try {
+    const data = await Astro.request.formData();
+    console.log(data);
+
+    const raceTo = parseInt(data.get("raceTo") as string);
+
+    const player1Id = data.get("player1Id") as string;
+    const player1Frames = parseInt(data.get("player1Frames") as string);
+    const player1Tier = parseInt(data.get("player1Tier") as string);
+    const player1Won = player1Frames === raceTo;
+
+    const player2Id = data.get("player2Id") as string;
+    const player2Frames = parseInt(data.get("player2Frames") as string);
+    const player2Tier = parseInt(data.get("player2Tier") as string);
+    const player2Won = player2Frames === raceTo;
+
+    const queries = [];
+
+    queries.push(
+      db
+        .update(Match)
+        .set({
+          status: player1Won || player2Won ? "finished" : "active",
+        })
+        .where(eq(Match.id, id!))
+    );
+
+    queries.push(
+      db
+        .update(MatchStats)
+        .set({ framesWon: player1Frames })
+        .where(
+          and(eq(MatchStats.matchId, id!), eq(MatchStats.playerId, player1Id))
+        )
+    );
+
+    queries.push(
+      db
+        .update(MatchStats)
+        .set({ framesWon: player2Frames })
+        .where(
+          and(eq(MatchStats.matchId, id!), eq(MatchStats.playerId, player2Id))
+        )
+    );
+
+    // swap tiers if needed
+    if (
+      (player1Won && player1Tier > player2Tier) ||
+      (player2Won && player2Tier > player1Tier)
+    ) {
+      queries.push(
+        db
+          .update(Player)
+          .set({ tier: player2Tier })
+          .where(eq(Player.id, player1Id))
+      );
+
+      queries.push(
+        db
+          .update(Player)
+          .set({ tier: player1Tier })
+          .where(eq(Player.id, player2Id))
+      );
+    }
+
+    await db.batch(queries as any);
+
+    return Astro.redirect("/admin/match");
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+  }
+}
+---
+
+<Layout pageTitle="Matches">
+  <h1 class="text-xl my-8 text-center font-light dark:text-gray-300">
+    Matches
+  </h1>
+
+  <div class="relative overflow-x-auto shadow-md">
+    <form method="POST">
+      <table
+        class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+      >
+        <tbody>
+          {
+            Object.values(result).map((match: any) => {
+              if (match.id === id) {
+                return (
+                  <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200">
+                    <td class="py-4 px-2 font-medium text-right text-gray-900 whitespace-nowrap dark:text-white">
+                      {match.players[0].name}
+                      <input
+                        type="hidden"
+                        name="player1Id"
+                        value={match.players[0].id}
+                      />
+                      <input
+                        type="hidden"
+                        name="player1Tier"
+                        value={match.players[0].tier}
+                      />
+                    </td>
+                    <td class="py-4 w-16">
+                      <select
+                        name="player1Frames"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      >
+                        {Array(match.raceTo + 1)
+                          .fill(0)
+                          .map((_, o) => (
+                            <option
+                              value={o}
+                              selected={o === match.players[0].frames}
+                            >
+                              {o}
+                            </option>
+                          ))}
+                      </select>
+                    </td>
+                    <td class="py-4 text-center">-</td>
+                    <td class="py-4 w-16">
+                      <select
+                        name="player2Frames"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      >
+                        {Array(match.raceTo + 1)
+                          .fill(0)
+                          .map((_, o) => (
+                            <option
+                              value={o}
+                              selected={o === match.players[1].frames}
+                            >
+                              {o}
+                            </option>
+                          ))}
+                      </select>
+                    </td>
+                    <td class="py-4 px-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                      {match.players[1].name}
+                      <input
+                        type="hidden"
+                        name="player2Id"
+                        value={match.players[1].id}
+                      />
+                      <input
+                        type="hidden"
+                        name="player2Tier"
+                        value={match.players[1].tier}
+                      />
+                    </td>
+                    <td class="py-4">{match.status}</td>
+                    <td class="py-4">
+                      <input type="hidden" name="raceTo" value={match.raceTo} />
+                      <button class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                        Update
+                      </button>
+                    </td>
+                  </tr>
+                );
+              } else
+                return (
+                  <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200">
+                    <td class="py-4 font-medium text-right text-gray-900 whitespace-nowrap dark:text-white">
+                      {match.players[0].name}
+                    </td>
+                    <td class="py-4 w-16 text-right">{match.players[0].frames}</td>
+                    <td class="py-4 text-center">-</td>
+                    <td class="py-4 w-16">{match.players[1].frames}</td>
+                    <td class="py-4  font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                      {match.players[1].name}
+                    </td>
+                    <td class="py-4">{match.status}</td>
+                    <td class="py-4">
+                      {match.status !== "finished" && (
+                        <a
+                          href={`/admin/match/${match.id}`}
+                          class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                        >
+                          Edit
+                        </a>
+                      )}
+                    </td>
+                  </tr>
+                );
+            })
+          }
+        </tbody>
+      </table>
+    </form>
+  </div>
+</Layout>
