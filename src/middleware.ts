@@ -40,6 +40,10 @@ const playerMiddleware: MiddlewareHandler = async function (context, next) {
     }
 
     context.locals.player = player;
+
+    if (!isProtectedRoute(context.request)) {
+      return next("/dpk");
+    }
   }
 
   return next();

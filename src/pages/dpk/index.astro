@@ -1,7 +1,66 @@
 ---
 import Layout from "../../layout/default.astro";
+import PlayerCard from "../../components/PlayerCard.astro";
+import { db, Player, MatchStats, Match, eq } from "astro:db";
+
+async function getPlayerInfo(player: {
+  name: string;
+  id: string;
+  active: boolean;
+  handicap: number;
+  tier: number;
+  admin: boolean;
+}) {
+  const formMatchStats = await db
+    .select()
+    .from(MatchStats)
+    .innerJoin(Match, eq(MatchStats.matchId, Match.id))
+    .where(eq(MatchStats.playerId, player.id))
+    .limit(5);
+
+  const form = formMatchStats.reduce((acc, { Match, MatchStats }) => {
+    const gameForm = Match.raceTo === MatchStats.framesWon ? 1 : -1;
+    acc += gameForm;
+    return acc;
+  }, 0);
+
+  return { ...player, form };
+}
+
+const players = await db.select().from(Player).orderBy(Player.tier);
+const playersInfo = await Promise.all(players.map((p) => getPlayerInfo(p)));
+
+const player = await db
+  .select()
+  .from(Player)
+  .where(eq(Player.id, Astro.locals.player.id));
+const currentPlayer = player[0];
+let currentTier = 0;
 ---
 
-<Layout>
-  <h1 class="text-xl my-8 text-center font-light dark:text-gray-300">DPK League</h1>
+<Layout pageTitle="DPK League">
+  <h1 class="text-xl my-8 text-center font-light dark:text-gray-300">
+    DPK League
+  </h1>
+  <div class="flex flex-col gap-3">
+    {
+      playersInfo.map((p) => (
+        <div>
+          {currentTier !== p.tier && (
+            <h2 class="text-l my-4 text-center font-light dark:text-gray-300">
+              Tier {++currentTier}
+            </h2>
+          )}
+
+          <PlayerCard name={p.name} handicap={p.handicap} form={p.form}>
+            {p.tier === currentPlayer.tier - 1 && (
+              <a class="mx-auto inline-block cursor-pointer text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                Challenge
+              </a>
+            )}
+          </PlayerCard>
+        </div>
+      ))
+    }
+  </div>
 </Layout>
