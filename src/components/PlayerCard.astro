@@ -1,0 +1,23 @@
+---
+const { name, picture, form, handicap } = Astro.props;
+const formTextClass =
+  form > 0 ? "text-green-800" : form === 0 ? "text-blue-800" : "text-red-800";
+---
+
+<div class="p-2 bg-white rounded-lg flex gap-2 relative">
+  <div class="rounded-lg overflow-hidden">
+    <img src={picture} alt="Profile picture" width="80px" />
+  </div>
+  <div class="flex flex-col gap-1">
+    <div class="flex gap-2">
+      <span class="inline-flex font-medium">Form</span><snap
+        class={`inline-flex ${formTextClass}`}>{form > 0 ? "+" : ""}{form}</snap
+      >
+    </div>
+    <div class="font-medium">{name}</div>
+  </div>
+  <div class="min-w-32 absolute text-right right-2 bottom-2"><slot /></div>
+  <div class="absolute top-2 right-2">
+    <img src={`/assets/handicap-${handicap}.svg`} />
+  </div>
+</div>

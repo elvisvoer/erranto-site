@@ -6,7 +6,7 @@ const { pageTitle, description } = Astro.props;
 ---
 
 <BaseLayout pageTitle={pageTitle} description={description}>
-  <main style="background-color: #f5f5f5;" class="flex flex-col h-full mx-auto w-full max-w-screen-sm">
+  <main style="background-color: #f5f5f5;" class="p-4 flex flex-col h-full mx-auto w-full max-w-screen-sm">
     <slot />
   </main>
   <NavBar />
