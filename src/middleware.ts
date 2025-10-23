@@ -4,7 +4,7 @@ import { sequence } from "astro:middleware";
 import { DPK_ADMIN_EMAIL } from "astro:env/server";
 import { db, eq, Player } from "astro:db";
 
-const isProtectedRoute = createRouteMatcher(["/dkp(.*)", "/admin(.*)"]);
+const isProtectedRoute = createRouteMatcher(["/dpk(.*)", "/admin(.*)"]);
 const isAdminRoute = createRouteMatcher(["/admin(.*)"]);
 
 const authMiddleware = clerkMiddleware((auth, context) => {
