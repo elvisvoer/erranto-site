@@ -4,6 +4,7 @@ declare namespace App {
   interface Locals {
     player: {
       id: string;
+      profileURI: string;
       name: string;
       active: boolean;
       admin: boolean;

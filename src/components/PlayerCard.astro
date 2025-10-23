@@ -1,12 +1,14 @@
 ---
-const { name, picture, form, handicap } = Astro.props;
+const { id, name, picture, form, handicap } = Astro.props;
 const formTextClass =
   form > 0 ? "text-green-800" : form === 0 ? "text-blue-800" : "text-red-800";
 ---
 
 <div class="p-2 bg-white rounded-lg flex gap-2 relative shadow-sm">
   <div class="rounded-lg overflow-hidden">
-    <img src={picture ?? `/assets/no-profile-picture.png`} alt="Profile picture" width="80px" />
+    <a href={`/dpk/profile/${id}`}
+      ><img src={picture} alt="Profile picture" width="80px" /></a
+    >
   </div>
   <div class="flex flex-col gap-1">
     <div class="flex gap-2 text-sm">

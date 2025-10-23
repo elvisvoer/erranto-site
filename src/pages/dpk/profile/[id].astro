@@ -1,0 +1,9 @@
+---
+import PlayerProfile from "../../../components/PlayerProfile.astro";
+import { db, eq, Player } from "astro:db";
+const { id } = Astro.params;
+const res = await db.select().from(Player).where(eq(Player.id, id!));
+const currentPlayer = res[0];
+---
+
+<PlayerProfile player={currentPlayer} />

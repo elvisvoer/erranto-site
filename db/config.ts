@@ -3,6 +3,7 @@ import { defineDb, defineTable, column, NOW } from "astro:db";
 const Player = defineTable({
   columns: {
     id: column.text({ primaryKey: true }),
+    profileURI: column.text({ default: "/assets/no-profile-picture.png" }),
     name: column.text(),
     handicap: column.number({ default: 3 }),
     tier: column.number({ default: 8 }),

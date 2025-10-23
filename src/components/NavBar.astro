@@ -1,6 +1,5 @@
 ---
 import { SignedIn } from "@clerk/astro/components";
-const user = await Astro.locals.currentUser();
 const currentPlayer = Astro.locals.player;
 ---
 
@@ -47,7 +46,7 @@ const currentPlayer = Astro.locals.player;
       >
         <img
           class="inline-block h-10 w-10 rounded-full object-cover object-center m-auto"
-          src={user?.imageUrl}
+          src={currentPlayer.profileURI}
           alt="profile"
         />
         <span class="inline-block text-sm">Profile</span>

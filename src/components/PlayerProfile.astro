@@ -1,16 +1,14 @@
 ---
-import Layout from "../../layout/default.astro";
-import { SignedIn, SignOutButton } from "@clerk/astro/components";
-import PlayerCard from "../../components/PlayerCard.astro";
+import Layout from "../layout/default.astro";
+import PlayerCard from "./PlayerCard.astro";
 import { db, eq, Player, Match, MatchStats } from "astro:db";
-const user = await Astro.locals.currentUser();
-const currentPlayer = Astro.locals.player;
+const { player } = Astro.props;
 
 const formMatchStats = await db
   .select()
   .from(MatchStats)
   .innerJoin(Match, eq(MatchStats.matchId, Match.id))
-  .where(eq(MatchStats.playerId, Astro.locals.player.id))
+  .where(eq(MatchStats.playerId, player.id))
   .limit(5);
 const form = formMatchStats.reduce((acc, { Match, MatchStats }) => {
   const gameForm = Match.raceTo === MatchStats.framesWon ? 1 : -1;
@@ -37,23 +35,20 @@ const results = rows.reduce((acc: any, { Match, MatchStats, Player }) => {
 
 const recentMatches = Object.values(results).filter(
   (m) =>
-    m.players[0].id === Astro.locals.player.id ||
-    m.players[1].id === Astro.locals.player.id
+    m.players[0].id === player.id ||
+    m.players[1].id === player.id
 );
 ---
 
-<Layout pageTitle="DPK Profile">
+<Layout pageTitle={player.name}>
   <PlayerCard
-    name={currentPlayer.name}
-    picture={user?.imageUrl}
+    id={player.id}
+    name={player.name}
+    picture={player.profileURI}
     form={form}
-    handicap={currentPlayer.handicap}
+    handicap={player.handicap}
   >
-    <SignedIn>
-      <SignOutButton
-        class:list={"mx-auto text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"}
-      />
-    </SignedIn>
+    <slot />
   </PlayerCard>
   <h2 class="text-l my-4 text-center font-light dark:text-gray-300">
     Recent matches
