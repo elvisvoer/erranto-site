@@ -5,12 +5,12 @@ import { db, Player } from "astro:db";
 const players = await db.select().from(Player).orderBy(Player.tier);
 ---
 
-<Layout pageTitle="Users">
-  <h1 class="text-xl my-8 text-center font-light dark:text-gray-300">
-    Players
+<Layout pageTitle="DPK Players">
+  <h1 class="text-xl my-6 text-center font-light dark:text-gray-300">
+    DPK Players
   </h1>
 
-  <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+  <div class="relative overflow-x-auto shadow-md rounded-lg">
     <table
       class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
     >

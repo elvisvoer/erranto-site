@@ -4,18 +4,14 @@ import { SignedIn, SignOutButton } from "@clerk/astro/components";
 import PlayerCard from "../../components/PlayerCard.astro";
 import { db, eq, Player, Match, MatchStats } from "astro:db";
 const user = await Astro.locals.currentUser();
-const player = await db
-  .select()
-  .from(Player)
-  .where(eq(Player.id, Astro.locals.player.id));
+const currentPlayer = Astro.locals.player;
+
 const formMatchStats = await db
   .select()
   .from(MatchStats)
   .innerJoin(Match, eq(MatchStats.matchId, Match.id))
   .where(eq(MatchStats.playerId, Astro.locals.player.id))
   .limit(5);
-
-const currentPlayer = player[0];
 const form = formMatchStats.reduce((acc, { Match, MatchStats }) => {
   const gameForm = Match.raceTo === MatchStats.framesWon ? 1 : -1;
   acc += gameForm;
@@ -27,7 +23,6 @@ const rows = await db
   .from(Match)
   .innerJoin(MatchStats, eq(Match.id, MatchStats.matchId))
   .innerJoin(Player, eq(MatchStats.playerId, Player.id));
-
 const results = rows.reduce((acc: any, { Match, MatchStats, Player }) => {
   if (!acc[Match.id]) {
     acc[Match.id] = {
@@ -47,7 +42,7 @@ const recentMatches = Object.values(results).filter(
 );
 ---
 
-<Layout pageTitle="Profile">
+<Layout pageTitle="DPK Profile">
   <PlayerCard
     name={currentPlayer.name}
     picture={user?.imageUrl}

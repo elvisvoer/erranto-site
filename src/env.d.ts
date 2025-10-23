@@ -7,6 +7,8 @@ declare namespace App {
       name: string;
       active: boolean;
       admin: boolean;
+      tier: number;
+      handicap: number;
     };
   }
 }

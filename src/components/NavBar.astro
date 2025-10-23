@@ -1,6 +1,7 @@
 ---
 import { SignedIn } from "@clerk/astro/components";
 const user = await Astro.locals.currentUser();
+const currentPlayer = Astro.locals.player;
 ---
 
 <SignedIn>
@@ -25,9 +26,13 @@ const user = await Astro.locals.currentUser();
         />
         <span class="inline-block text-sm">Pyramid</span>
       </a>
-      <span class="inline-flex flex-col justify-center items-center" style="margin-top: -68px;" >
+      <a
+        href={currentPlayer.admin ? "/admin" : "#"}
+        class="inline-flex flex-col justify-center items-center"
+        style="margin-top: -68px;"
+      >
         <img src="/assets/dpk-logo.png" alt="rules" />
-      </span>
+      </a>
       <a class="inline-flex flex-col justify-center items-center">
         <img
           class="inline-block h-10 w-10"
