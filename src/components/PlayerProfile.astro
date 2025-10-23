@@ -1,7 +1,7 @@
 ---
 import Layout from "../layout/default.astro";
 import PlayerCard from "./PlayerCard.astro";
-import { db, eq, Player, Match, MatchStats } from "astro:db";
+import { db, eq, desc, Player, Match, MatchStats } from "astro:db";
 const { player } = Astro.props;
 
 const formMatchStats = await db
@@ -20,7 +20,8 @@ const rows = await db
   .select()
   .from(Match)
   .innerJoin(MatchStats, eq(Match.id, MatchStats.matchId))
-  .innerJoin(Player, eq(MatchStats.playerId, Player.id));
+  .innerJoin(Player, eq(MatchStats.playerId, Player.id))
+  .orderBy(desc(Match.createdAt));
 const results = rows.reduce((acc: any, { Match, MatchStats, Player }) => {
   if (!acc[Match.id]) {
     acc[Match.id] = {
@@ -34,9 +35,7 @@ const results = rows.reduce((acc: any, { Match, MatchStats, Player }) => {
 }, {});
 
 const recentMatches = Object.values(results).filter(
-  (m) =>
-    m.players[0].id === player.id ||
-    m.players[1].id === player.id
+  (m) => m.players[0].id === player.id || m.players[1].id === player.id
 );
 ---
 
