@@ -38,18 +38,6 @@ const description = Astro.props.description || pkg.description
       data-website-id="3e8f8c7e-de17-40c6-bc2e-5362a6cc6cf8"
       data-domains="erranto.com,erranto-site.vercel.app"></script>
 
-    <script is:inline>
-      if (
-        localStorage.getItem("color-theme") === "dark" ||
-        (!("color-theme" in localStorage) &&
-          window.matchMedia("(prefers-color-scheme: dark)").matches)
-      ) {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
-    </script>
-
     <style is:global>
       pre.astro-code > code {
         /**
