@@ -10,7 +10,7 @@ const { posts } = Astro.props;
           new Date(b.data.created).getTime() -
           new Date(a.data.created).getTime()
       )
-      .map(({ slug, data: { created, tags, title } }: any) => (
+      .map(({ data: { slug, created, tags, title } }: any) => (
         <li class="mb-8 ml-4">
           <article>
             <header>

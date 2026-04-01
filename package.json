@@ -13,13 +13,13 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/mdx": "^4.3.13",
+    "@astrojs/mdx": "^5.0.3",
     "@astrojs/rss": "^4.0.18",
     "@astrojs/sitemap": "^3.7.2",
-    "@astrojs/svelte": "^7.2.5",
+    "@astrojs/svelte": "^8.0.4",
     "@astrojs/tailwind": "^6.0.2",
     "@popperjs/core": "^2.11.8",
-    "astro": "^5.16.4",
+    "astro": "^6.1.2",
     "flowbite": "^4.0.1",
     "flowbite-typography": "^1.0.5",
     "markdown-it": "^14.1.1",

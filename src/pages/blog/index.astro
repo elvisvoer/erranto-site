@@ -4,7 +4,7 @@ import Layout from "../../layout/default.astro";
 import PostsList from "../../components/PostsList.astro";
 
 const blogEntries = (await getCollection("blog")).filter(
-  (post) => !post.data.archived
+  (post: any) => !post.data.archived
 );
 ---
 
